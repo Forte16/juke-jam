@@ -1,5 +1,6 @@
 body {
   background-color: #F45A5A;
+  color: white;
 }
 
 .main {
@@ -39,5 +40,7 @@ body {
   margin-left: 30px;
   margin-right: 30px;
   cursor: pointer;
-  display:inline-block
+  display:inline-block;
+  color: white;
+  border-color: white;
 }
