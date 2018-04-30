@@ -1,4 +1,3 @@
-import Link from 'react-router';
 import React, { Component } from 'react';
 import './Host.css';
 import SpotifyWebApi from 'spotify-web-api-js';
@@ -16,9 +15,16 @@ class Host extends Component {
     }
     this.state = {
       loggedIn: token ? true : false,
-      playlists: []
+      playlists: [],
+      autoAdd: true,
+      limitReq: 10,
+      playlistID: 0,
+      takeRecommendations: false
     }
     this.getFinalPlaylist = this.getFinalPlaylist.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
   getHashParams() {
     var hashParams = {};
@@ -36,8 +42,8 @@ class Host extends Component {
     .then((response) => {
        let playlists1 = []
        for (let i=0; i< response.items.length; i++) {
-          let obj = {name: response.items[i].name, id: response.items[i].id, key: i};
-          playlists1.push(obj);
+           let obj = {name: response.items[i].name, id: response.items[i].id, key: i, images: response.items[i].images, tracks: response.items[i].tracks};
+           playlists1.push(obj);
         }
         this.setState({playlists: playlists1});
       }
@@ -55,18 +61,92 @@ class Host extends Component {
       this.getPlaylists();
     }
   }
+
+  handleCheckBoxChange(event) {
+    this.setState({
+      autoAdd : !this.state.autoAdd
+    })
+  }
+  handleChange(event) {
+      this.setState({
+          limitReq: event.target.value
+      })
+  }
+
+  handleSubmit() {
+    let temp = document.querySelector('input[name="playlists"]:checked');
+    if (temp === null) {
+      alert("You must select a playlist!");
+    } else {
+      this.setState({playlistID: temp.value});
+      this.setState({takeRecommendations: true});
+    }
+  }
+
   render() {
-    const top = this.state.loggedIn ? <div> Choose a playlist from below: </div> : <a href='http://localhost:8888'> Login to Spotify </a>
-    return (
-      <div className="App">
-        {top}
-        <div>
-        <ul>
-         {this.state.playlists.map(function(playlist, i){
-           return <a key={playlist.key} href={"lobbyhost/"+playlist.id}> <li key={playlist.key} id={playlist.id}> {playlist.name} </li> </a>
-         })}
-        </ul>
+    let viewer;
+
+    if (!this.state.takeRecommendations) {
+      viewer = (
+        <div className="App">
+          <form>
+          <div className="Top">
+            <div className="words">
+              Select the settings for your Juke Jam playlist!
+            </div>
+            <hr className="divider"/>
+          </div>
+
+          <div className="Middle">
+              <div className = "BigLeft">
+                 {this.state.playlists.map(function(playlist, i){
+                   return (
+                    <div className="playlist" key={i}>
+                     <input type="radio" name="playlists" className="buttons" value={playlist.id}/>
+                        <div className="left">
+                          <img id="cover" src = {playlist.images[0].url}/>
+                        </div>
+                        <div className ="right">
+                          <p>
+                           &#9835; {playlist.name} <br/>
+                           <i>{playlist.tracks.total} songs</i>
+                           </p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className = "BigRight">
+                  Automatically add songs:
+                  <input name="autoAddSongs" type="checkbox" checked={this.state.autoAdd} onChange={this.handleCheckBoxChange} />
+                  <br/>
+                  <br />
+                  Limit per person:
+                  <input type="text" value={this.state.limitReq} onChange={this.handleChange} />
+                </div>
+
+              </div>
+            </form>
+          <div className= "Bottom">
+            <button type="submit" onClick={this.handleSubmit} id="btn">Make your choice!</button>
+          </div>
+
         </div>
+      )
+    }
+
+    if (this.state.takeRecommendations) {
+      viewer = (
+        <div>
+          {this.state.playlistID}
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        {viewer}
       </div>
     );
   }

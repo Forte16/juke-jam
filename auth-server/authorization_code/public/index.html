@@ -22,7 +22,7 @@
     <div class="container">
       <div id="login">
         <center><h1 id="header">Connect your Spotify account with Juke Jam!</h1></center>
-        <center><a href="/login" class="btn btn-primary" id="btn">Log into Spotify</a></center>
+        <center><a href="/login" class="btn btn-primary" id="btn">Log into Spotify </a></center>
       </div>
       <div id="loggedin">
         <div id="user-profile">
@@ -74,9 +74,14 @@
           var hashParams = {};
           var e, r = /([^&;=]+)=?([^&;]*)/g,
               q = window.location.hash.substring(1);
+          // FORTE DID THIS
+          let type = window.location.toString().substring(window.location.toString().indexOf("?")+1);
+          hashParams.type = type;
+          // FORTE DID ABOVE
           while ( e = r.exec(q)) {
              hashParams[e[1]] = decodeURIComponent(e[2]);
           }
+
           return hashParams;
         }
 
@@ -92,7 +97,8 @@
 
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
-            error = params.error;
+            error = params.error,
+            type = params.type;
 
         if (error) {
           alert('There was an error during the authentication');

@@ -7,6 +7,8 @@ var client_id = '7a96d588b0a848eea9336baa9d992ad1'; // Your client id
 var client_secret = '986b9b3d4d124b3aa11a92bf7fdd9c70'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+var type = "host"; //FORTE
+
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -30,6 +32,10 @@ app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
 app.get('/login', function(req, res) {
+
+  //Below used for redirecting
+  let typeHelper = req.headers.referer.toString();
+  type = typeHelper.substring(typeHelper.indexOf("?")+1);
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -89,11 +95,23 @@ app.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log(body);
+          //console.log(body);
         });
 
+
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:3000/host#' +
+
+        //CHECK IF HOST OR GUEST - FORTE
+        let redirect = 'http://localhost:3000/host#'; //change
+
+        if (type == "host") {
+          redirect = 'http://localhost:3000/host#';
+        }
+        if (type == "guest") {
+          redirect = 'http://localhost:3000/guest#'
+        }
+
+        res.redirect(redirect +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
