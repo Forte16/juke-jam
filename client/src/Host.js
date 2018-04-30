@@ -16,8 +16,8 @@ class Host extends Component {
     this.state = {
       loggedIn: token ? true : false,
       playlists: [],
-      autoAdd: true,
-      limitReq: 10,
+      autoAdd: false,
+      limit: 0,
       playlistID: 0,
       takeRecommendations: false
     }
@@ -63,14 +63,10 @@ class Host extends Component {
   }
 
   handleCheckBoxChange(event) {
-    this.setState({
-      autoAdd : !this.state.autoAdd
-    })
+    this.setState({autoAdd : !this.state.autoAdd})
   }
   handleChange(event) {
-      this.setState({
-          limitReq: event.target.value
-      })
+    this.setState({limit: event.target.value})
   }
 
   handleSubmit() {
@@ -81,6 +77,7 @@ class Host extends Component {
       this.setState({playlistID: temp.value});
       this.setState({takeRecommendations: true});
     }
+    console.log(this.state.limit);
   }
 
   render() {
@@ -92,7 +89,7 @@ class Host extends Component {
           <form>
           <div className="Top">
             <div className="words">
-              Select the settings for your Juke Jam playlist!
+              Select the settings for your Juke Jam party!
             </div>
             <hr className="divider"/>
           </div>
@@ -122,14 +119,21 @@ class Host extends Component {
                   <input name="autoAddSongs" type="checkbox" checked={this.state.autoAdd} onChange={this.handleCheckBoxChange} />
                   <br/>
                   <br />
-                  Limit per person:
-                  <input type="text" value={this.state.limitReq} onChange={this.handleChange} />
+                  Max recommendations per person (default 0 = no limit):
+                  <select onChange={this.handleChange}>
+                    <option value={0}>0</option> <option value={1}>1</option>
+                    <option value={2}>2</option> <option value={3}>3</option>
+                    <option value={4}>4</option> <option value={5}>5</option>
+                    <option value={6}>6</option> <option value={7}>7</option>
+                    <option value={8}>8</option> <option value={9}>9</option>
+                    <option value={10}>10</option>
+                  </select>
                 </div>
 
               </div>
             </form>
           <div className= "Bottom">
-            <button type="submit" onClick={this.handleSubmit} id="btn">Make your choice!</button>
+            <button type="submit" onClick={this.handleSubmit} id="btn">Create your Juke Jam party</button>
           </div>
 
         </div>
@@ -138,9 +142,7 @@ class Host extends Component {
 
     if (this.state.takeRecommendations) {
       viewer = (
-        <div>
-          {this.state.playlistID}
-        </div>
+        <Song name="Nice for What" artist="Drake" playlistID={this.state.playlistID} songID="1cTZMwcBJT0Ka3UJPXOeeN"/>
       )
     }
 
@@ -150,6 +152,56 @@ class Host extends Component {
       </div>
     );
   }
+}
+
+class Song extends Component {
+  constructor() {
+    super();
+    const params = this.getHashParams();
+    const token = params.access_token;
+    if (token) {
+      spotifyApi.setAccessToken(token);
+    }
+  }
+
+  getHashParams() {
+    var hashParams = {};
+    var e, r = /([^&;=]+)=?([^&;]*)/g,
+        q = window.location.hash.substring(1);
+    e = r.exec(q)
+    while (e) {
+       hashParams[e[1]] = decodeURIComponent(e[2]);
+       e = r.exec(q);
+    }
+    return hashParams;
+  }
+
+  addMe(e) {
+    let str = e.target.id;
+    let playlistID = str.substring(0, str.indexOf('?'));
+    let songID = str.substring(str.indexOf('?')+1);
+    let uris = ["spotify:track:"+ songID];
+    console.log(str);
+    console.log(playlistID);
+    console.log(songID);
+
+    spotifyApi.getMe()
+      .then((response) => {
+          let userID = response.id;
+          spotifyApi.addTracksToPlaylist(userID, playlistID, uris);
+        }
+      )
+  }
+
+  render() {
+    return (
+      <div className="add">
+        {this.props.name + " by " + this.props.artist}
+        <input type="button" className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
+      </div>
+    );
+  }
+
 }
 
 export default Host;

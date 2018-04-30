@@ -104,11 +104,13 @@ class Guest extends Component {
      }
 
     return (
-      <div>
-        { viewer }
-      </div>
+        <div>
+          { viewer }
+        </div>
     )
   }
 }
+
+
 
 export default Guest
