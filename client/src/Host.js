@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Host.css';
 import SpotifyWebApi from 'spotify-web-api-js';
+import socketIOClient from 'socket.io-client';
 
 
 const spotifyApi = new SpotifyWebApi();
@@ -19,9 +20,17 @@ class Host extends Component {
       autoAdd: false,
       limit: 0,
       playlistID: 0,
-      takeRecommendations: false
+      code: 0,
+      takeRecommendations: false,
+      recommendedSongs: [ '3H9CQYRjYS2bixQXoawh98',
+                         '4qKcDkK6siZ7Jp1Jb4m0aL',
+                         '5mCPDVBb16L4XQwDdbRUpz',
+                         '2XW4DbS6NddZxRPm5rMCeY',
+                         '739vCwA3EpBSkk3uDsI2wB',
+                         '1cTZMwcBJT0Ka3UJPXOeeN',
+                         '1wZqJM5FGDEl3FjHDxDyQd',
+                         '0Y0TOsE1q11qgbi7c5WZsG' ]
     }
-    this.getFinalPlaylist = this.getFinalPlaylist.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -38,24 +47,18 @@ class Host extends Component {
     return hashParams;
   }
   getPlaylists(){
-  spotifyApi.getUserPlaylists()
-    .then((response) => {
-       let playlists1 = []
-       for (let i=0; i< response.items.length; i++) {
-           let obj = {name: response.items[i].name, id: response.items[i].id, key: i, images: response.items[i].images, tracks: response.items[i].tracks};
-           playlists1.push(obj);
+    spotifyApi.getUserPlaylists()
+      .then((response) => {
+         let playlists1 = []
+         for (let i=0; i< response.items.length; i++) {
+             let obj = {name: response.items[i].name, id: response.items[i].id, key: i, images: response.items[i].images, tracks: response.items[i].tracks};
+             playlists1.push(obj);
+          }
+          this.setState({playlists: playlists1});
         }
-        this.setState({playlists: playlists1});
-      }
-    )
+      )
   }
-  getFinalPlaylist(){
-  spotifyApi.getPlaylist()
-    .then((response) => {
-        console.log(response);
-      }
-    )
-  }
+
   componentDidMount() {
     if (this.state.loggedIn) {
       this.getPlaylists();
@@ -76,12 +79,13 @@ class Host extends Component {
     } else {
       this.setState({playlistID: temp.value});
       this.setState({takeRecommendations: true});
+      this.setState({code: temp.value.substring(0, 6)})
     }
-    console.log(this.state.limit);
   }
 
   render() {
     let viewer;
+    let playlistID = this.state.playlistID;
 
     if (!this.state.takeRecommendations) {
       viewer = (
@@ -91,7 +95,7 @@ class Host extends Component {
             <div className="words">
               Select the settings for your Juke Jam party!
             </div>
-            <hr className="divider"/>
+            <hr className="divider4"/>
           </div>
 
           <div className="Middle">
@@ -142,8 +146,28 @@ class Host extends Component {
 
     if (this.state.takeRecommendations) {
       viewer = (
-        <Song name="Nice for What" artist="Drake" playlistID={this.state.playlistID} songID="1cTZMwcBJT0Ka3UJPXOeeN"/>
+        <div>
+          <div className="code">
+            Your lobby's code: <span className="code2"> {this.state.code} </span>
+          </div>
+          <hr className="divider"/>
+          <div className="topPart">
+            Recommended songs from your friends:
+          </div>
+          <div className="recommendedSongs">
+             {this.state.recommendedSongs.map(function(songID, i){
+               return(
+                 <Song playlistID={playlistID} key={i} songID={songID}/>
+               )
+             })}
+          </div>
+        </div>
       )
+    }
+
+    if (this.state.takeRecommendations) {
+      const socket = socketIOClient("http://localhost:5555");
+      socket.emit('addSong', this.state.code);
     }
 
     return (
@@ -157,11 +181,17 @@ class Host extends Component {
 class Song extends Component {
   constructor() {
     super();
+    this.state = {
+      name: "",
+      artist: ""
+    }
     const params = this.getHashParams();
     const token = params.access_token;
     if (token) {
       spotifyApi.setAccessToken(token);
     }
+    this.findDetails = this.findDetails.bind(this)
+    this.addMe = this.addMe.bind(this)
   }
 
   getHashParams() {
@@ -181,9 +211,6 @@ class Song extends Component {
     let playlistID = str.substring(0, str.indexOf('?'));
     let songID = str.substring(str.indexOf('?')+1);
     let uris = ["spotify:track:"+ songID];
-    console.log(str);
-    console.log(playlistID);
-    console.log(songID);
 
     spotifyApi.getMe()
       .then((response) => {
@@ -191,13 +218,30 @@ class Song extends Component {
           spotifyApi.addTracksToPlaylist(userID, playlistID, uris);
         }
       )
+
+    alert(this.state.name + " by " + this.state.artist + " has been added to your playlist!");
   }
 
+  findDetails(e) {
+    spotifyApi.getTrack(e)
+      .then((response) => {
+        let name = response.name;
+        let artist = response.artists[0].name;
+        this.setState({name: name, artist: artist});
+      })
+  }
+
+  componentWillMount() {
+    this.findDetails(this.props.songID);
+  }
+
+
   render() {
+
     return (
-      <div className="add">
-        {this.props.name + " by " + this.props.artist}
-        <input type="button" className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
+      <div className="selections">
+        {this.state.name + " by " + this.state.artist}
+        <input type="button" value='&#10004;' className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
       </div>
     );
   }

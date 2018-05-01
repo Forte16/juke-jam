@@ -39,7 +39,7 @@ class Guest extends Component {
 
   handleClick() {
     let code = document.getElementById('text1').value;
-    if (code.length !== 22) {
+    if (code.length !== 6) {
       alert("Code is of incorrect length!");
     } else {
       this.setState({change: true});
@@ -57,7 +57,8 @@ class Guest extends Component {
           let name = response.tracks.items[i].name;
           let artist = response.tracks.items[i].artists[0].name;
           let id = response.tracks.items[i].id;
-          let obj = {name: name, artist: artist, id: id};
+          let code = this.state.code;
+          let obj = {name: name, artist: artist, id: id, code: code};
           objects.push(obj);
         }
         this.setState({currentSongs: objects});
@@ -73,9 +74,15 @@ class Guest extends Component {
     if (this.state.change) {
       viewer = (
          <div className="main">
-           <div>
-             Welcome to lobby {this.state.code}!
+           <div className="code">
+             Welcome to lobby: <span className="code2"> {this.state.code} </span>
            </div>
+           <hr className="divider"/>
+
+           <div className="searchWords">
+           Search for a track you'd like to recommend below:
+           </div>
+
 
            <input type="text" id="text2"/>
            <input type="button" id="btn2" value="Submit" onClick={this.getTracks}/>
@@ -83,7 +90,7 @@ class Guest extends Component {
            <div>
               {this.state.currentSongs.map(function(song, i){
                 return(
-                  <GuestSelections name={song.name} artist={song.artist} id={song.id} key={i}/>
+                  <GuestSelections code={song.code} name={song.name} artist={song.artist} id={song.id} key={i}/>
                 )
               })}
            </div>
@@ -100,8 +107,9 @@ class Guest extends Component {
          <input type="text" id="text1"/>
          <input type="button" id="btn1" value="Submit" onClick={this.handleClick}/>
            </form>
-       </div>);
-     }
+       </div>
+     );
+   }
 
     return (
         <div>

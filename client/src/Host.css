@@ -35,10 +35,6 @@ p {
   margin-top: 50px;
 }
 
-.divider {
-  border: white 1px solid;
-}
-
 .Middle{
     display: flex;
 }
@@ -61,4 +57,49 @@ p {
 
 #btn {
   font-size: 14px;
+}
+
+.topPart {
+  text-align: center;
+  font-size: 24px;
+  padding-top: 6px;
+  padding-bottom: 10px;
+}
+
+.code {
+  text-align: center;
+  font-size: 16px;
+  padding: 8px;
+}
+
+.code2 {
+  text-align: center;
+  font-family: "Do Hyeon";
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.divider {
+  border: white 1px solid;
+  max-width: 500px;
+  min-width: 200px;
+}
+
+.divider4 {
+  border: white 1px solid;
+}
+
+.recommendedSongs {
+  text-align: center;
+}
+
+.selections {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  align-items: flex;
+
+}
+
+.recommendMe {
+
 }
