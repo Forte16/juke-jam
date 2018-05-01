@@ -101,5 +101,10 @@ p {
 }
 
 .recommendMe {
+  margin-left: 5px;
 
+}
+
+.socketBtnDiv {
+  text-align: center;
 }

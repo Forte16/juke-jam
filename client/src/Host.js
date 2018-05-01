@@ -81,14 +81,13 @@ class Host extends Component {
 
   refresh() {
 
-      socket.emit('addSong', this.state.code);
+    socket.emit('addSong', this.state.code);
 
-      if (this.state.takeRecommendations) {
-        socket.on('recommended', (resp) => {
-          console.log(resp.list)
-          this.setState({recommendedSongs: resp.list})
-        })
-      }
+    if (this.state.takeRecommendations) {
+      socket.on('recommended', (resp) => {
+        this.setState({recommendedSongs: resp.list})
+      })
+    }
 
   }
 
@@ -171,7 +170,7 @@ class Host extends Component {
              })}
           </div>
           <div className="socketBtnDiv">
-            <input type="button" className="socketBtn" value='Refresh recommedations' onClick={this.refresh}/>
+            <input type="button" className="socketBtn" value='Refresh' onClick={this.refresh}/>
           </div>
         </div>
 
