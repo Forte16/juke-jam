@@ -6,6 +6,8 @@ import socketIOClient from 'socket.io-client';
 
 const spotifyApi = new SpotifyWebApi();
 
+const socket = socketIOClient("http://localhost:5555")
+
 class Host extends Component {
   constructor(){
     super();
@@ -22,18 +24,12 @@ class Host extends Component {
       playlistID: 0,
       code: 0,
       takeRecommendations: false,
-      recommendedSongs: [ '3H9CQYRjYS2bixQXoawh98',
-                         '4qKcDkK6siZ7Jp1Jb4m0aL',
-                         '5mCPDVBb16L4XQwDdbRUpz',
-                         '2XW4DbS6NddZxRPm5rMCeY',
-                         '739vCwA3EpBSkk3uDsI2wB',
-                         '1cTZMwcBJT0Ka3UJPXOeeN',
-                         '1wZqJM5FGDEl3FjHDxDyQd',
-                         '0Y0TOsE1q11qgbi7c5WZsG' ]
+      recommendedSongs: []
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.refresh = this.refresh.bind(this)
   }
   getHashParams() {
     var hashParams = {};
@@ -81,6 +77,19 @@ class Host extends Component {
       this.setState({takeRecommendations: true});
       this.setState({code: temp.value.substring(0, 6)})
     }
+  }
+
+  refresh() {
+
+      socket.emit('addSong', this.state.code);
+
+      if (this.state.takeRecommendations) {
+        socket.on('recommended', (resp) => {
+          console.log(resp.list)
+          this.setState({recommendedSongs: resp.list})
+        })
+      }
+
   }
 
   render() {
@@ -161,13 +170,12 @@ class Host extends Component {
                )
              })}
           </div>
+          <div className="socketBtnDiv">
+            <input type="button" className="socketBtn" value='Refresh recommedations' onClick={this.refresh}/>
+          </div>
         </div>
-      )
-    }
 
-    if (this.state.takeRecommendations) {
-      const socket = socketIOClient("http://localhost:5555");
-      socket.emit('addSong', this.state.code);
+      )
     }
 
     return (

@@ -50,7 +50,9 @@ io.on('connection', socket => {
   socket.on('addSong', (code) => {
 
 
-    console.log("Yeeeerrrrrr", code);
+    console.log("Recommended songs: " + myMap.get(code));
+
+    socket.emit('recommended', {list: myMap.get(code)});
 
 
   })
