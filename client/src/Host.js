@@ -81,11 +81,13 @@ class Host extends Component {
 
   refresh() {
 
-    socket.emit('addSong', this.state.code);
+    socket.emit('addSong', this.state.code, this.state.limit);
 
     if (this.state.takeRecommendations) {
       socket.on('recommended', (resp) => {
-        this.setState({recommendedSongs: resp.list})
+        if (typeof resp.list !== "undefined") {
+          this.setState({recommendedSongs: resp.list})
+        }
       })
     }
 
@@ -248,7 +250,7 @@ class Song extends Component {
     return (
       <div className="selections">
         {this.state.name + " by " + this.state.artist}
-        <input type="button" value='&#10004;' className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
+        <input type="button" value='Add' className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
       </div>
     );
   }

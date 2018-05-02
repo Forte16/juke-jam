@@ -18,9 +18,11 @@ const io = socketIO(server)
   CODE FOR STORING RECOMMENDATIONS
 */
 
-var myMap = new Map();
+var recMap = new Map(); //key: codes; values: strings of song ids
 
+var ipMap = new Map();//key: code + "?" + ip address; value: number of requests from that ip in that section
 
+var limitMap = new Map();
 
 
 
@@ -30,29 +32,50 @@ io.on('connection', socket => {
 
   socket.on('newSong', (id, code) => {
 
+    let clientIp = socket.request.connection.remoteAddress;
+    let ipMapKey = code + '?' + clientIp;
 
-    if (typeof myMap.get(code) === 'undefined') {
-      // set the code to map to an array holding just the code
-      myMap.set(code, [id]);
+    if (typeof ipMap.get(ipMapKey) === 'undefined') {
+      ipMap.set(ipMapKey, 1)
     } else {
-      let array = myMap.get(code);
-      if (!array.includes(id)) {
-        array.push(id);
-        myMap.set(code, array);
-      }
+      let n = ipMap.get(ipMapKey)+1;
+      console.log(n)
+      ipMap.set(ipMapKey, n);
     }
 
-    console.log(myMap.get(code));
+    let numOfReq = ipMap.get(ipMapKey);
+
+    console.log("numOfReq = " + numOfReq);
+    console.log("limitMap.get(code) = " + limitMap.get(code));
+
+
+    if (numOfReq <= limitMap.get(code) || limitMap.get(code) === 0) {
+      
+      if (typeof recMap.get(code) === 'undefined') {
+        // set the code to map to an array holding just the code
+        recMap.set(code, [id]);
+      } else {
+        let array = recMap.get(code);
+        if (!array.includes(id)) {
+          array.push(id);
+          recMap.set(code, array);
+        }
+      }
+
+    }
+
 
 
   })
 
-  socket.on('addSong', (code) => {
+  socket.on('addSong', (code, limit) => {
 
 
-    console.log("Recommended songs: " + myMap.get(code));
+    limitMap.set(code, limit)
 
-    socket.emit('recommended', {list: myMap.get(code)});
+    socket.emit('recommended', {list: recMap.get(code)});
+
+
 
 
   })

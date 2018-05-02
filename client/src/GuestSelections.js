@@ -31,7 +31,7 @@ class GuestSelections extends Component {
     return (
       <div className="selections">
         {this.props.name + " by " + this.props.artist}
-        <input type="button" className="recommendMe" name={this.props.name + '?' +  this.props.artist} id={this.props.id + "?" + this.props.code} value='&#10004;' onClick={this.recommendMe}/>
+        <input type="button" className="recommendMe" name={this.props.name + '?' +  this.props.artist} id={this.props.id + "?" + this.props.code} value='Add' onClick={this.recommendMe}/>
       </div>
     );
   }
@@ -39,23 +39,3 @@ class GuestSelections extends Component {
 }
 
 export default GuestSelections
-
-/*
-let id = e.target.id
-
-var myHeaders = new Headers();
-myHeaders.append('Content-Type', 'text/xml');
-
-var myInit = { method: 'GET',
-           headers: myHeaders,
-           mode: 'no-cors',
-           cache: 'default'
-          };
-
-const myRequest = new Request('http://localhost:8888/recommend', myInit);
-
-  fetch(myRequest)
-    .then(response => {
-      console.log(response);
-    });
-    */
