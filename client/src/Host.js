@@ -3,7 +3,10 @@ import './Host.css';
 import SpotifyWebApi from 'spotify-web-api-js';
 import socketIOClient from 'socket.io-client';
 
-
+/*
+Spotify Web API Link:
+https://github.com/JMPerez/spotify-web-api-js/blob/master/src/spotify-web-api.js
+*/
 const spotifyApi = new SpotifyWebApi();
 
 const socket = socketIOClient("http://localhost:5555")
@@ -77,11 +80,19 @@ class Host extends Component {
       this.setState({takeRecommendations: true});
       this.setState({code: temp.value.substring(0, 6)})
     }
+
+    let code = temp.value.substring(0, 6);
+    let limit = this.state.limit;
+
+    socket.emit('host settings', code, limit);
+
+
+
   }
 
   refresh() {
 
-    socket.emit('addSong', this.state.code, this.state.limit);
+    socket.emit('refresh', this.state.code);
 
     if (this.state.takeRecommendations) {
       socket.on('recommended', (resp) => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Guest.css';
 import GuestSelections from './GuestSelections.js';
 import SpotifyWebApi from 'spotify-web-api-js';
+import socketIOClient from 'socket.io-client';
 
 
 const spotifyApi = new SpotifyWebApi();
@@ -39,12 +40,25 @@ class Guest extends Component {
 
   handleClick() {
     let code = document.getElementById('text1').value;
+
     if (code.length !== 6) {
       alert("Code is of incorrect length!");
     } else {
-      this.setState({change: true});
-      this.setState({code: code});
+      const socket = socketIOClient("http://localhost:5555");
+
+      socket.emit('check lobby', code);
+
+      socket.on('is lobby', (resp) => {
+        if (resp.bool) { //if the lobby exists
+          this.setState({change: true});
+          this.setState({code: code});
+        } else { //if the lobby doesn't exist
+          alert("There is currently not a lobby with this access code.")
+        }
+      })
     }
+
+
   }
 
   getTracks(){

@@ -22,7 +22,8 @@ var recMap = new Map(); //key: codes; values: strings of song ids
 
 var ipMap = new Map();//key: code + "?" + ip address; value: number of requests from that ip in that section
 
-var limitMap = new Map();
+var settingsMap = new Map(); //key: code; value: record {limit; }
+
 
 
 
@@ -45,12 +46,9 @@ io.on('connection', socket => {
 
     let numOfReq = ipMap.get(ipMapKey);
 
-    console.log("numOfReq = " + numOfReq);
-    console.log("limitMap.get(code) = " + limitMap.get(code));
 
+    if (numOfReq <= settingsMap.get(code).limit || settingsMap.get(code).limit === 0) {
 
-    if (numOfReq <= limitMap.get(code) || limitMap.get(code) === 0) {
-      
       if (typeof recMap.get(code) === 'undefined') {
         // set the code to map to an array holding just the code
         recMap.set(code, [id]);
@@ -64,19 +62,27 @@ io.on('connection', socket => {
 
     }
 
-
-
   })
 
-  socket.on('addSong', (code, limit) => {
-
-
-    limitMap.set(code, limit)
+  socket.on('refresh', (code) => {
 
     socket.emit('recommended', {list: recMap.get(code)});
 
+    console.log(settingsMap.get(code));
 
+  })
 
+  socket.on('check lobby', (code) => {
+
+    let bool = (typeof settingsMap.get(code) === 'object');
+
+    socket.emit('is lobby', {bool: bool});
+
+  })
+
+  socket.on('host settings', (code, limit) => {
+
+    settingsMap.set(code, {limit: limit});
 
   })
 
