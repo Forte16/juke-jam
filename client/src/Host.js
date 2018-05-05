@@ -212,6 +212,7 @@ class Song extends Component {
     }
     this.findDetails = this.findDetails.bind(this)
     this.addMe = this.addMe.bind(this)
+    this.deleteMe = this.deleteMe.bind(this)
   }
 
   getHashParams() {
@@ -240,6 +241,45 @@ class Song extends Component {
       )
 
     alert(this.state.name + " by " + this.state.artist + " has been added to your playlist!");
+
+    //delete the song after adding it
+    this.deleteMe(e);
+  }
+
+  deleteMe(e) {
+    //code to delete from server
+    let str = e.target.id;
+    let playlistID = str.substring(0, 6);
+    let songID = str.substring(str.indexOf('?')+1);
+
+    socket.emit('delete song', playlistID, songID);
+
+
+
+    //code to delete from frontend
+    let parent = e.target.parentElement;
+
+    let temp = parent.firstChild;
+
+    while(temp) {
+        parent.removeChild(temp);
+        temp = parent.firstChild;
+    }
+
+    /*
+    let array = this.state.recommendedSongs;
+    let index = array.indexOf(songID);
+
+    if (index > -1) {
+      if (array.length === 1) {
+        this.setState({recommendedSongs: []})
+      } else {
+        array.splice(index, 1)
+        this.setState({recommendedSongs: array});
+      }
+    }
+    */
+
   }
 
   findDetails(e) {
@@ -262,6 +302,7 @@ class Song extends Component {
       <div className="selections">
         {this.state.name + " by " + this.state.artist}
         <input type="button" value='Add' className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
+        <input type="button" value='Delete' className="deleteMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.deleteMe}/>
       </div>
     );
   }

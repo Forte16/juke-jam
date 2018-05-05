@@ -40,7 +40,6 @@ io.on('connection', socket => {
       ipMap.set(ipMapKey, 1)
     } else {
       let n = ipMap.get(ipMapKey)+1;
-      console.log(n)
       ipMap.set(ipMapKey, n);
     }
 
@@ -68,7 +67,6 @@ io.on('connection', socket => {
 
     socket.emit('recommended', {list: recMap.get(code)});
 
-    console.log(settingsMap.get(code));
 
   })
 
@@ -83,6 +81,23 @@ io.on('connection', socket => {
   socket.on('host settings', (code, limit) => {
 
     settingsMap.set(code, {limit: limit});
+
+  })
+
+  socket.on('delete song', (id, code) => {
+
+    let array = recMap.get(id);
+    let index = array.indexOf(code);
+
+    if (index > -1) {
+      if (array.length === 1) {
+        recMap.set(id, []);
+      } else {
+        array.splice(index, 1)
+        recMap.set(id, array);
+      }
+    }
+
 
   })
 
