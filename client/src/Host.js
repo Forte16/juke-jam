@@ -79,14 +79,13 @@ class Host extends Component {
       this.setState({playlistID: temp.value});
       this.setState({takeRecommendations: true});
       this.setState({code: temp.value.substring(0, 6)})
+
+      let code = temp.value.substring(0, 6);
+      let limit = this.state.limit;
+
+      socket.emit('host settings', code, limit);
+      
     }
-
-    let code = temp.value.substring(0, 6);
-    let limit = this.state.limit;
-
-    socket.emit('host settings', code, limit);
-
-
 
   }
 
@@ -265,20 +264,6 @@ class Song extends Component {
         parent.removeChild(temp);
         temp = parent.firstChild;
     }
-
-    /*
-    let array = this.state.recommendedSongs;
-    let index = array.indexOf(songID);
-
-    if (index > -1) {
-      if (array.length === 1) {
-        this.setState({recommendedSongs: []})
-      } else {
-        array.splice(index, 1)
-        this.setState({recommendedSongs: array});
-      }
-    }
-    */
 
   }
 
