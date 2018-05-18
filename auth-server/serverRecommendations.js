@@ -20,16 +20,13 @@ const io = socketIO(server)
 
 var recMap = new Map(); //key: codes; values: strings of song ids
 
-var ipMap = new Map();//key: code + "?" + ip address; value: number of requests from that ip in that section
+var ipMap = new Map(); //key: code + "?" + ip address; value: number of requests from that ip in that section
 
 var settingsMap = new Map(); //key: code; value: record {limit; }
 
 
 
-
-
 io.on('connection', socket => {
-  console.log('New client connected')
 
   socket.on('newSong', (id, code) => {
 
@@ -103,7 +100,7 @@ io.on('connection', socket => {
 
   // disconnect is fired when a client leaves the server
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    //code for when a client disconnects is here
   })
 })
 

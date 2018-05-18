@@ -1,6 +1,19 @@
 import React, { Component } from 'react';
 import './Home.css'
 
+{/*
+  File: Home.js - Style: Home.css
+
+  Notes:
+  1. Styling without bootstrap seems to be good for both desktop and mobile.
+  2. Fonts and styling is great.
+
+  Additions:
+  1. Better description of the app - make sure proper font is used and styling still works and looks good.
+*/}
+
+
+
 class Home extends Component {
   render() {
     return (

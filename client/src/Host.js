@@ -3,10 +3,21 @@ import './Host.css';
 import SpotifyWebApi from 'spotify-web-api-js';
 import socketIOClient from 'socket.io-client';
 
-/*
-Spotify Web API Link:
-https://github.com/JMPerez/spotify-web-api-js/blob/master/src/spotify-web-api.js
-*/
+import emptyPic from './pics/empty.png';
+
+import "bootstrap/dist/css/bootstrap.css";
+import { Grid, Row, Col, Jumbotron, Image, Button, Form } from "react-bootstrap";
+
+{/*
+  File: Host.js - Style: Host.css
+
+  Notes:
+  1. Spotify Web API Link: https://github.com/JMPerez/spotify-web-api-js/blob/master/src/spotify-web-api.js
+
+  Additions:
+  1. Second view: everything
+*/}
+
 const spotifyApi = new SpotifyWebApi();
 
 const socket = socketIOClient("http://localhost:5555")
@@ -84,12 +95,17 @@ class Host extends Component {
       let limit = this.state.limit;
 
       socket.emit('host settings', code, limit);
-      
+
     }
 
   }
 
+
   refresh() {
+
+    Array.prototype.diff = function(a) {
+      return this.filter(function(i) {return a.indexOf(i) < 0;});
+    }
 
     socket.emit('refresh', this.state.code);
 
@@ -118,46 +134,64 @@ class Host extends Component {
             <hr className="divider4"/>
           </div>
 
-          <div className="Middle">
-              <div className = "BigLeft">
-                 {this.state.playlists.map(function(playlist, i){
-                   return (
-                    <div className="playlist" key={i}>
-                     <input type="radio" name="playlists" className="buttons" value={playlist.id}/>
-                        <div className="left">
-                          <img id="cover" src = {playlist.images[0].url}/>
-                        </div>
-                        <div className ="right">
-                          <p>
-                           &#9835; {playlist.name} <br/>
-                           <i>{playlist.tracks.total} songs</i>
-                           </p>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
 
-                <div className = "BigRight">
-                  Automatically add songs:
-                  <input name="autoAddSongs" type="checkbox" checked={this.state.autoAdd} onChange={this.handleCheckBoxChange} />
-                  <br/>
-                  <br />
-                  Max recommendations per person (default 0 = no limit):
-                  <select onChange={this.handleChange}>
-                    <option value={0}>0</option> <option value={1}>1</option>
-                    <option value={2}>2</option> <option value={3}>3</option>
-                    <option value={4}>4</option> <option value={5}>5</option>
-                    <option value={6}>6</option> <option value={7}>7</option>
-                    <option value={8}>8</option> <option value={9}>9</option>
-                    <option value={10}>10</option>
-                  </select>
-                </div>
+
+          <div className="Middle">
+
+            <div className = "maxRecSection">
+              <div className = "settingsWords">
+              Max recommendations per person (default 0 = no limit):
+              </div>
+              <div>
+              <form>
+                <select id="select" class="form-control" onChange={this.handleChange}>
+                  <option value={0}>0</option> <option value={1}>1</option>
+                  <option value={2}>2</option> <option value={3}>3</option>
+                  <option value={4}>4</option> <option value={5}>5</option>
+                  <option value={6}>6</option> <option value={7}>7</option>
+                  <option value={8}>8</option> <option value={9}>9</option>
+                  <option value={10}>10</option>
+                </select>
+              </form>
+              </div>
+            </div>
+
+
+
+
+            <div className = "settingsWords bottomSettingsWords">
+              Select your playlist:
+            </div>
+
+
+            <div id="playlistsSection">
+            <Row>
+               {this.state.playlists.map(function(playlist, i){
+                 let x = typeof playlist.images[0] === "undefined" ? emptyPic : playlist.images[0].url;
+                 return (
+                  <Col className="playlist" key={i}>
+                    <input type="radio" name="playlists" className="buttons" value={playlist.id}/>
+                    <span className="playlistLeft">
+                      <img class="cover" src = {x}/>
+                    </span>
+                    <span className="playlistRight">
+                       <div class="playlistRightInners"> &#9835; {playlist.name} </div>
+                      <div class="playlistRightInners"> <i>{playlist.tracks.total} songs</i> </div>
+                     </span>
+                    </Col>
+                  )
+                })}
+              </Row>
+              </div>
+
 
               </div>
+
             </form>
+
+
           <div className= "Bottom">
-            <button type="submit" onClick={this.handleSubmit} id="btn">Create your Juke Jam party</button>
+            <button type="submit" onClick={this.handleSubmit} id="btn">Submit</button>
           </div>
 
         </div>
