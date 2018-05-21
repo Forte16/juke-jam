@@ -8,13 +8,13 @@ class GuestSelections extends Component {
     let str = e.target.id;
     let id = str.substring(0, str.indexOf('?'));
     let code = str.substring(str.indexOf('?')+1);
-    const socket = socketIOClient("http://localhost:5555")  // this is where we are connecting to with sockets
+    const socket = socketIOClient("http://localhost:5555");
 
-    // this emits an event to the socket (your server) with an argument of 'red'
-    // you can make the argument any color you would like, or any kind of data you want to send.
+
 
     socket.emit('newSong', id, code);
-    // socket.emit('change color', 'red', 'yellow') | you can have multiple arguments
+
+    
 
     let str2 = e.target.name;
     let name = str2.substring(0, str2.indexOf('?'));
@@ -31,7 +31,7 @@ class GuestSelections extends Component {
     return (
       <div className="selections">
         {this.props.name + " by " + this.props.artist}
-        <input type="button" className="recommendMe" name={this.props.name + '?' +  this.props.artist} id={this.props.id + "?" + this.props.code} value='Add' onClick={this.recommendMe}/>
+        <input type="button" className="recommendMe customBtn2" name={this.props.name + '?' +  this.props.artist} id={this.props.id + "?" + this.props.code} value='Add' onClick={this.recommendMe}/>
       </div>
     );
   }

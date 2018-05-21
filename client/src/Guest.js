@@ -7,6 +7,13 @@ import socketIOClient from 'socket.io-client';
 
 const spotifyApi = new SpotifyWebApi();
 
+{/*
+  File: Guest.js - Style: Guest.css
+
+  Notes:
+
+*/}
+
 
 class Guest extends Component {
   constructor() {
@@ -99,7 +106,7 @@ class Guest extends Component {
 
 
            <input type="text" id="text2"/>
-           <input type="button" id="btn2" value="Submit" onClick={this.getTracks}/>
+           <input type="button" id="btn2" className="customBtn3"  value="Submit" onClick={this.getTracks}/>
 
            <div>
               {this.state.currentSongs.map(function(song, i){
@@ -116,11 +123,11 @@ class Guest extends Component {
    if (!this.state.change) {
      viewer = (
        <div className="main">
-         <div> Welcome! Please enter your host's code. </div>
+         <div id="welcome1"> Welcome! Please enter your host's code. </div>
          <form>
-         <input type="text" id="text1"/>
-         <input type="button" id="btn1" value="Submit" onClick={this.handleClick}/>
-           </form>
+          <input type="text" id="text1"/>
+          <input type="button" id="btn1" className="customBtn3" value="Submit" onClick={this.handleClick}/>
+         </form>
        </div>
      );
    }

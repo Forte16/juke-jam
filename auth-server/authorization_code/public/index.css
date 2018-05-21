@@ -1,5 +1,5 @@
 body {
-  background-color: #8097E6;
+  background-color: #8C0000;
   color: white;
   font-family: "Lato";
 }
@@ -10,7 +10,23 @@ body {
   padding-bottom: 30px;
 }
 
-#btn {
-  color: white;
+.customBtn {
+  font-size: 16px;
+  font-family: "Lato";
+  background-color: white;
+  color: #555555;
+  border: 1px solid white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
 
+}
+
+.customBtn:hover {
+    background-color: #555555;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
 }

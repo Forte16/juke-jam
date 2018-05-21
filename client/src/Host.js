@@ -13,9 +13,6 @@ import { Grid, Row, Col, Jumbotron, Image, Button, Form } from "react-bootstrap"
 
   Notes:
   1. Spotify Web API Link: https://github.com/JMPerez/spotify-web-api-js/blob/master/src/spotify-web-api.js
-
-  Additions:
-  1. Second view: everything
 */}
 
 const spotifyApi = new SpotifyWebApi();
@@ -138,28 +135,11 @@ class Host extends Component {
 
           <div className="Middle">
 
-            <div className = "maxRecSection">
-              <div className = "settingsWords">
-              Max recommendations per person (default 0 = no limit):
-              </div>
-              <div>
-              <form>
-                <select id="select" class="form-control" onChange={this.handleChange}>
-                  <option value={0}>0</option> <option value={1}>1</option>
-                  <option value={2}>2</option> <option value={3}>3</option>
-                  <option value={4}>4</option> <option value={5}>5</option>
-                  <option value={6}>6</option> <option value={7}>7</option>
-                  <option value={8}>8</option> <option value={9}>9</option>
-                  <option value={10}>10</option>
-                </select>
-              </form>
-              </div>
-            </div>
 
 
 
 
-            <div className = "settingsWords bottomSettingsWords">
+            <div className = "settingsWords">
               Select your playlist:
             </div>
 
@@ -184,6 +164,31 @@ class Host extends Component {
               </Row>
               </div>
 
+              <div className = "maxRecSection">
+                <span className = "settingsWords">
+                Max recommendations per person:
+                </span>
+                <table>
+                <tr>
+                <form>
+                <td>
+                  <select id="select" class="form-control" onChange={this.handleChange}>
+                    <option value={0}>0</option> <option value={1}>1</option>
+                    <option value={2}>2</option> <option value={3}>3</option>
+                    <option value={4}>4</option> <option value={5}>5</option>
+                    <option value={6}>6</option> <option value={7}>7</option>
+                    <option value={8}>8</option> <option value={9}>9</option>
+                    <option value={10}>10</option>
+                  </select>
+                </td>
+                <td>
+                <p id="maxSpan"> <b><i> Note: </i> </b> The default value of 0 is no limit. </p>
+                </td>
+                </form>
+                </tr>
+                </table>
+              </div>
+
 
               </div>
 
@@ -191,7 +196,7 @@ class Host extends Component {
 
 
           <div className= "Bottom">
-            <button type="submit" onClick={this.handleSubmit} id="btn">Submit</button>
+            <button type="submit" onClick={this.handleSubmit} className="customBtn" id="btn">Submit</button>
           </div>
 
         </div>
@@ -216,7 +221,7 @@ class Host extends Component {
              })}
           </div>
           <div className="socketBtnDiv">
-            <input type="button" className="socketBtn" value='Refresh' onClick={this.refresh}/>
+            <input className="customBtn" type="button" value='Refresh' onClick={this.refresh}/>
           </div>
         </div>
 
@@ -320,8 +325,8 @@ class Song extends Component {
     return (
       <div className="selections">
         {this.state.name + " by " + this.state.artist}
-        <input type="button" value='Add' className="recommendMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
-        <input type="button" value='Delete' className="deleteMe" id={this.props.playlistID + "?" + this.props.songID} onClick={this.deleteMe}/>
+        <input type="button" value='Add' className="recommendMe customBtn2" id={this.props.playlistID + "?" + this.props.songID} onClick={this.addMe}/>
+        <input type="button" value='Delete' className="deleteMe customBtn2" id={this.props.playlistID + "?" + this.props.songID} onClick={this.deleteMe}/>
       </div>
     );
   }
