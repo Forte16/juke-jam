@@ -7,12 +7,12 @@ import socketIOClient from 'socket.io-client';
 
 const spotifyApi = new SpotifyWebApi();
 
-{/*
+/*
   File: Guest.js - Style: Guest.css
 
   Notes:
 
-*/}
+*/
 
 
 class Guest extends Component {
@@ -62,7 +62,10 @@ class Guest extends Component {
         } else { //if the lobby doesn't exist
           alert("There is currently not a lobby with this access code.")
         }
+        socket.close();
       })
+
+
     }
 
 
@@ -108,7 +111,7 @@ class Guest extends Component {
            <input type="text" id="text2"/>
            <input type="button" id="btn2" className="customBtn3"  value="Submit" onClick={this.getTracks}/>
 
-           <div>
+           <div className="songsGuest">
               {this.state.currentSongs.map(function(song, i){
                 return(
                   <GuestSelections code={song.code} name={song.name} artist={song.artist} id={song.id} key={i}/>

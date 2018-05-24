@@ -7,7 +7,6 @@ div, button {
   font-size: 14px;
   height: 25px;
   width: 40px;
-  margin-top: 15px;
   margin-left: 35px;
 }
 
@@ -133,6 +132,12 @@ div, button {
   text-align: center;
 }
 
+@media(max-width:650px) {
+  .recommendedSongs {
+    text-align: left;
+  }
+}
+
 .selections {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -181,5 +186,5 @@ div, button {
   font-size: 14px;
   margin-left: 5px;
   text-align: center;
-
+  margin-top: 15px;
 }

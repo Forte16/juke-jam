@@ -28,7 +28,7 @@ var settingsMap = new Map(); //key: code; value: record {limit; }
 
 io.on('connection', socket => {
 
-  socket.on('newSong', (id, code) => {
+  socket.on('newSong', function(id, code, callback) {
 
     let clientIp = socket.request.connection.remoteAddress;
     let ipMapKey = code + '?' + clientIp;
@@ -42,8 +42,9 @@ io.on('connection', socket => {
 
     let numOfReq = ipMap.get(ipMapKey);
 
+    let canRecommend = numOfReq <= settingsMap.get(code).limit || settingsMap.get(code).limit === 0;
 
-    if (numOfReq <= settingsMap.get(code).limit || settingsMap.get(code).limit === 0) {
+    if (canRecommend) {
 
       if (typeof recMap.get(code) === 'undefined') {
         // set the code to map to an array holding just the code
@@ -57,6 +58,11 @@ io.on('connection', socket => {
       }
 
     }
+
+    //code for alerting Guest when they've exceeded recommendations
+
+
+    callback(canRecommend);
 
   })
 

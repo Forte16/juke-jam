@@ -37,6 +37,7 @@
   text-decoration: none;
   display: inline-block;
   padding-top: 5px;
+
 }
 
 .customBtn3:hover {
@@ -47,4 +48,14 @@
 
 .customBtn3:focus {
   outline: none;
+}
+
+.songsGuest {
+  text-align: center;
+}
+
+@media(max-width:650px) {
+  .songsGuest {
+    text-align: left;
+  }
 }

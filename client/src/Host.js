@@ -6,18 +6,16 @@ import socketIOClient from 'socket.io-client';
 import emptyPic from './pics/empty.png';
 
 import "bootstrap/dist/css/bootstrap.css";
-import { Grid, Row, Col, Jumbotron, Image, Button, Form } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
-{/*
+/*
   File: Host.js - Style: Host.css
 
   Notes:
   1. Spotify Web API Link: https://github.com/JMPerez/spotify-web-api-js/blob/master/src/spotify-web-api.js
-*/}
+*/
 
 const spotifyApi = new SpotifyWebApi();
-
-const socket = socketIOClient("http://localhost:5555")
 
 class Host extends Component {
   constructor(){
@@ -91,7 +89,14 @@ class Host extends Component {
       let code = temp.value.substring(0, 6);
       let limit = this.state.limit;
 
-      socket.emit('host settings', code, limit);
+      const socket = socketIOClient("http://localhost:5555");
+
+      socket.emit('host settings', code, limit, function() {
+        socket.close();
+      });
+
+
+
 
     }
 
@@ -99,10 +104,12 @@ class Host extends Component {
 
 
   refresh() {
-
+    //eslint-disable-next-line
     Array.prototype.diff = function(a) {
       return this.filter(function(i) {return a.indexOf(i) < 0;});
     }
+
+    const socket = socketIOClient("http://localhost:5555");
 
     socket.emit('refresh', this.state.code);
 
@@ -111,6 +118,7 @@ class Host extends Component {
         if (typeof resp.list !== "undefined") {
           this.setState({recommendedSongs: resp.list})
         }
+        socket.close();
       })
     }
 
@@ -152,11 +160,11 @@ class Host extends Component {
                   <Col className="playlist" key={i}>
                     <input type="radio" name="playlists" className="buttons" value={playlist.id}/>
                     <span className="playlistLeft">
-                      <img class="cover" src = {x}/>
+                      <img className="cover" src = {x} alt=""/>
                     </span>
                     <span className="playlistRight">
-                       <div class="playlistRightInners"> &#9835; {playlist.name} </div>
-                      <div class="playlistRightInners"> <i>{playlist.tracks.total} songs</i> </div>
+                       <div className="playlistRightInners"> &#9835; {playlist.name} </div>
+                      <div className="playlistRightInners"> <i>{playlist.tracks.total} songs</i> </div>
                      </span>
                     </Col>
                   )
@@ -169,10 +177,11 @@ class Host extends Component {
                 Max recommendations per person:
                 </span>
                 <table>
+                <tbody>
                 <tr>
-                <form>
+
                 <td>
-                  <select id="select" class="form-control" onChange={this.handleChange}>
+                  <select id="select" className="form-control" onChange={this.handleChange}>
                     <option value={0}>0</option> <option value={1}>1</option>
                     <option value={2}>2</option> <option value={3}>3</option>
                     <option value={4}>4</option> <option value={5}>5</option>
@@ -184,8 +193,9 @@ class Host extends Component {
                 <td>
                 <p id="maxSpan"> <b><i> Note: </i> </b> The default value of 0 is no limit. </p>
                 </td>
-                </form>
+
                 </tr>
+                </tbody>
                 </table>
               </div>
 
@@ -290,8 +300,11 @@ class Song extends Component {
     let playlistID = str.substring(0, 6);
     let songID = str.substring(str.indexOf('?')+1);
 
-    socket.emit('delete song', playlistID, songID);
 
+    const socket = socketIOClient("http://localhost:5555");
+    socket.emit('delete song', playlistID, songID, function() {
+      socket.close();
+    });
 
 
     //code to delete from frontend
