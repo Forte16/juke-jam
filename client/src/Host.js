@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Host.css';
+import './css/Host.css';
 import SpotifyWebApi from 'spotify-web-api-js';
 import socketIOClient from 'socket.io-client';
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './GuestSelections.css';
+import './css/GuestSelections.css';
 import socketIOClient from 'socket.io-client';
 
 class GuestSelections extends Component {
