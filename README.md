@@ -51,3 +51,6 @@ Host Requests
     - lobby code, song ID
   - Data received:
     - Promise
+
+Getting Apple Music API Keys:
+https://help.apple.com/developer-account/#/devce5522674
