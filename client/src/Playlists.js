@@ -10,7 +10,7 @@ const Playlists = props => (
   <div id="playlistsSection">
     <Row>
       {props.playlists.map(function (playlist) {
-        const x = typeof playlist.images[0] === 'undefined' ? emptyPic : playlist.images[0].url;
+        const x = typeof playlist.artwork === 'undefined' ? emptyPic : playlist.artwork;
         return (
           <Col className="playlist" key={playlist.id}>
             <input type="radio" name="playlists" className="buttons" value={playlist.id} />
@@ -24,7 +24,6 @@ const Playlists = props => (
               </div>
               <div className="playlistRightInners">
                 <i>
-                  {`${playlist.tracks.total} songs`}
                 </i>
               </div>
             </span>

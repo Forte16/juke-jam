@@ -20,32 +20,9 @@ const io = socketIO(server)
 
 var recMap = new Map(); //key: codes; values: strings of song ids
 
-var ipMap = new Map(); //key: code + "?" + ip address; value: number of requests from that ip in that section
-
-var settingsMap = new Map(); //key: code; value: record {limit; }
-
-
-
 io.on('connection', socket => {
 
   socket.on('newSong', function(id, code, callback) {
-
-    let clientIp = socket.request.connection.remoteAddress;
-    let ipMapKey = code + '?' + clientIp;
-
-    if (typeof ipMap.get(ipMapKey) === 'undefined') {
-      ipMap.set(ipMapKey, 1)
-    } else {
-      let n = ipMap.get(ipMapKey)+1;
-      ipMap.set(ipMapKey, n);
-    }
-
-    let numOfReq = ipMap.get(ipMapKey);
-
-    let canRecommend = numOfReq <= settingsMap.get(code).limit || settingsMap.get(code).limit === 0;
-
-    if (canRecommend) {
-
       if (typeof recMap.get(code) === 'undefined') {
         // set the code to map to an array holding just the code
         recMap.set(code, [id]);
@@ -56,28 +33,12 @@ io.on('connection', socket => {
           recMap.set(code, array);
         }
       }
-
-    }
-
-    //code for alerting Guest when they've exceeded recommendations
-
-
-    callback(canRecommend);
-
   })
 
   socket.on('refresh', (code) => {
 
     socket.emit('recommended', {list: recMap.get(code)});
 
-
-  })
-
-  socket.on('check lobby', (code) => {
-
-    let bool = (typeof settingsMap.get(code) === 'object');
-
-    socket.emit('is lobby', {bool: bool});
 
   })
 

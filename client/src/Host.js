@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './css/Host.css';
 import SpotifyWebApi from 'spotify-web-api-js';
+import PropTypes from 'prop-types';
 import socketIOClient from 'socket.io-client';
 import Playlists from './Playlists';
 import HostSongResults from './HostSongResults';
@@ -8,36 +9,18 @@ import HostSongResults from './HostSongResults';
 const spotifyApi = new SpotifyWebApi();
 
 class Host extends Component {
-  constructor() {
-    super();
-    function getHashParams() {
-      const hashParams = {};
-      const r = /([^&;=]+)=?([^&;]*)/g;
-      const q = window.location.hash.substring(1);
-      let e = r.exec(q);
-      while (e) {
-        hashParams[e[1]] = decodeURIComponent(e[2]);
-        e = r.exec(q);
-      }
-      return hashParams;
-    }
-    const params = getHashParams();
-    const token = params.access_token;
-    if (token) {
-      spotifyApi.setAccessToken(token);
-    }
+  constructor(props) {
+    super(props);
     this.state = {
-      loggedIn: token,
       playlists: [],
       autoAdd: false,
       limit: 0,
-      code: 0,
       playlistID: null,
       takeRecommendations: false,
       recommendedSongs: [],
     };
+    this.musicInstance = this.props.musicInstance;
     this.handleChange = this.handleChange.bind(this);
-    this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
@@ -46,12 +29,26 @@ class Host extends Component {
   }
 
   componentDidMount() {
-    if (this.state.loggedIn) {
-      this.getPlaylists();
-    }
+    this.getPlaylists()
   }
 
   getPlaylists() {
+    this.musicInstance.api.library.playlists()
+    .then((response) => {
+      const playlists1 = [];
+      for (let i = 0; i < response.length; i += 1) {
+        const obj = {
+          name: response[i].attributes.name,
+          id: response[i].id,
+          key: i,
+          artwork: response[i].attributes.artwork.url,
+        };
+        playlists1.push(obj);
+      }
+      this.setState({ playlists: playlists1 });
+    });
+  }
+    /*
     spotifyApi.getUserPlaylists()
       .then((response) => {
         const playlists1 = [];
@@ -67,12 +64,7 @@ class Host extends Component {
         }
         this.setState({ playlists: playlists1 });
       });
-  }
-
-  handleCheckBoxChange() {
-    const auto = this.state.autoAdd;
-    this.setState({ autoAdd: !auto });
-  }
+      */
 
   handleChange(event) {
     this.setState({ limit: event.target.value });
@@ -85,14 +77,12 @@ class Host extends Component {
     } else {
       this.setState({ playlistID: temp.value });
       this.setState({ takeRecommendations: true });
-      this.setState({ code: temp.value.substring(0, 6) });
 
-      const code = temp.value.substring(0, 6);
       const limit = this.state.limit;
 
       const socket = socketIOClient('http://localhost:5555');
 
-      socket.emit('host settings', code, limit, function () {
+      socket.emit('host settings', this.state.playlistID, limit, function () {
         socket.close();
       });
     }
@@ -107,7 +97,7 @@ class Host extends Component {
 
     const socket = socketIOClient('http://localhost:5555');
 
-    socket.emit('refresh', this.state.code);
+    socket.emit('refresh', this.state.playlistID);
 
     if (this.state.takeRecommendations) {
       socket.on('recommended', (resp) => {
@@ -153,7 +143,7 @@ class Host extends Component {
   deleteMe(event, songID) {
     // code to delete from server
     const socket = socketIOClient('http://localhost:5555');
-    socket.emit('delete song', this.state.code, songID, function () {
+    socket.emit('delete song', this.state.playlistID, songID, function () {
       socket.close();
     });
 
@@ -272,9 +262,11 @@ class Host extends Component {
         <div>
           <div className="code">
             {'Your lobby\'s code:'}
+            <a href={`localhost:3000/recommend/${this.state.playlistID}`}>
             <span className="code2">
-              {this.state.code}
+              {this.state.playlistID}
             </span>
+          </a>
           </div>
           <hr className="divider" />
           <div className="topPart">
@@ -285,7 +277,7 @@ class Host extends Component {
             recommendedSongs={this.state.recommendedSongs}
             addMe={this.addMe}
             deleteMe={this.deleteMe}
-            code={this.state.code}
+            playlist={this.state.playlist}
           />
 
           <div className="socketBtnDiv">
@@ -303,5 +295,9 @@ class Host extends Component {
     );
   }
 }
+
+Host.propTypes = {
+  musicInstance: PropTypes.object.isRequired,
+};
 
 export default Host;

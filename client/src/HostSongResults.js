@@ -7,8 +7,8 @@ const HostSongResults = props => (
     {props.recommendedSongs.map(song => (
       <div className="selections" key={song.songID}>
         {`${song.name} by ${song.artist}`}
-        <input type="button" value="Add" className="recommendMe customBtn2" id={`${props.code}?${song.songID}`} onClick={(event) => props.addMe(event, song.songID, song.name, song.artist)} />
-        <input type="button" value="Delete" className="deleteMe customBtn2" id={`${props.code}?${song.songID}`} onClick={(event) => props.deleteMe(event, song.songID)} />
+        <input type="button" value="Add" className="recommendMe customBtn2" onClick={(event) => props.addMe(event, song.songID, song.name, song.artist)} />
+        <input type="button" value="Delete" className="deleteMe customBtn2" onClick={(event) => props.deleteMe(event, song.songID)} />
       </div>
     ))}
   </div>
@@ -16,7 +16,7 @@ const HostSongResults = props => (
 
 HostSongResults.propTypes = {
   recommendedSongs: PropTypes.array.isRequired,
-  code: PropTypes.string.isRequired,
+  playlist: PropTypes.string.isRequired,
   addMe: PropTypes.func.isRequired,
   deleteMe: PropTypes.func.isRequired,
 };

@@ -7,7 +7,7 @@ const GuestSongResults = props => (
     {props.currentSongs.map(song => (
       <div className="selections">
         {`${song.name} by ${song.artist}`}
-        <input type="button" className="recommendMe customBtn2" name={`${song.name}?${song.artist}`} id={`${song.id}?${song.code}`} value="Add" onClick={props.recommendMe} />
+        <input type="button" className="recommendMe customBtn2" value="Add" onClick={() => props.recommendMe(song.id, song.name, song.artists)} />
       </div>
     ))
   }

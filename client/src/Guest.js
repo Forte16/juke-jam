@@ -7,44 +7,33 @@ import GuestSongResults from './GuestSongResults';
 
 const spotifyApi = new SpotifyWebApi();
 
+const url = window.location.href;
+const index = window.location.href.indexOf('mend/');
+const me = url.substring(index+5);
+
 class Guest extends Component {
-  constructor() {
-    super();
-    function getHashParams() {
-      const hashParams = {};
-      const r = /([^&;=]+)=?([^&;]*)/g;
-      const q = window.location.hash.substring(1);
-      let e = r.exec(q);
-      while (e) {
-        hashParams[e[1]] = decodeURIComponent(e[2]);
-        e = r.exec(q);
-      }
-      return hashParams;
-    }
-    const params = getHashParams();
-    const token = params.access_token;
-    if (token) {
-      spotifyApi.setAccessToken(token);
-    }
+  constructor(props) {
+    super(props);
     this.state = {
       change: false,
-      code: 'NO CODE',
+      playlistID: me,
       currentSongs: [],
     };
-    this.handleClick = this.handleClick.bind(this);
+    this.musicInstance = this.props.musicInstance;
     this.getTracks = this.getTracks.bind(this);
+    this.recommendMe = this.recommendMe.bind(this);
   }
 
   getTracks() {
-    this.setState({ currentSongs: [] });
+    // can get more from 'next' in response
     const fillin = document.getElementById('text2').value;
-    spotifyApi.searchTracks(fillin)
+    this.musicInstance.api.search(fillin)
       .then((response) => {
         const objects = [];
-        for (let i = 0; i < response.tracks.items.length; i += 1) {
-          const name = response.tracks.items[i].name;
-          const artist = response.tracks.items[i].artists[0].name;
-          const id = response.tracks.items[i].id;
+        for (let i = 0; i < response.songs.data.length; i += 1) {
+          const name = response.songs.data[i].attributes.name;
+          const artist = response.songs.data[i].attributes.artistName;
+          const id = response.songs.data[i].id;
           const code = this.state.code;
           const obj = {
             name: name, artist: artist, id: id, code: code,
@@ -55,40 +44,10 @@ class Guest extends Component {
       });
   }
 
-  handleClick() {
-    const code = document.getElementById('text1').value;
-
-    if (code.length !== 6) {
-      alert('Code is of incorrect length!');
-    } else {
-      const socket = socketIOClient('http://localhost:5555');
-
-      socket.emit('check lobby', code);
-
-      socket.on('is lobby', (resp) => {
-        if (resp.bool) { // if the lobby exists
-          this.setState({ change: true });
-          this.setState({ code: code });
-        } else { // if the lobby doesn't exist
-          alert('There is currently not a lobby with this access code.');
-        }
-        socket.close();
-      });
-    }
-  }
-
-  recommendMe(e) {
-    const str = e.target.id;
-    const id = str.substring(0, str.indexOf('?'));
-    const code = str.substring(str.indexOf('?') + 1);
-
-    const str2 = e.target.name;
-    const name = str2.substring(0, str2.indexOf('?'));
-    const artist = str2.substring(str2.indexOf('?') + 1);
-
+  recommendMe(id, name, artist) {
     const socket = socketIOClient('http://localhost:5555');
 
-    socket.emit('newSong', id, code, function (canRecommend) {
+    socket.emit('newSong', id, this.state.playlistID, function (canRecommend) {
       if (canRecommend) {
         alert(`Your recommendation of ${name} by ${artist} has been sent!`);
       } else {
@@ -99,47 +58,23 @@ class Guest extends Component {
   }
 
   render() {
-    let viewer;
-
-    if (this.state.change) {
-      viewer = (
-        <div className="main">
-          <div className="code">
-             Welcome to lobby:
-            <span className="code2">
-              {this.state.code}
-            </span>
-          </div>
-          <hr className="divider" />
-          <div className="searchWords">
-           Search for a track you'd like to recommend below:
-          </div>
-          <input type="text" id="text2" />
-          <input type="button" id="btn2" className="customBtn3" value="Submit" onClick={this.getTracks} />
-
-          <GuestSongResults currentSongs={this.state.currentSongs} recommendMe={this.recommendMe} />
-
-        </div>
-      );
-    }
-
-    if (!this.state.change) {
-      viewer = (
-        <div className="main">
-          <div id="welcome1">
-            Welcome! Please enter your host's code.
-          </div>
-          <form>
-            <input type="text" id="text1" />
-            <input type="button" id="btn1" className="customBtn3" value="Submit" onClick={this.handleClick} />
-          </form>
-        </div>
-      );
-    }
-
     return (
-      <div>
-        { viewer }
+      <div className="main">
+        <div className="code">
+           Welcome to lobby:
+          <span className="code2">
+            {this.state.playlistID}
+          </span>
+        </div>
+        <hr className="divider" />
+        <div className="searchWords">
+         Search for a track you'd like to recommend below:
+        </div>
+        <input type="text" id="text2" />
+        <input type="button" id="btn2" className="customBtn3" value="Submit" onClick={this.getTracks} />
+
+        <GuestSongResults currentSongs={this.state.currentSongs} recommendMe={this.recommendMe} />
+
       </div>
     );
   }
