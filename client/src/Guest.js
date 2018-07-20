@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
 import './css/Guest.css';
-import SpotifyWebApi from 'spotify-web-api-js';
-import socketIOClient from 'socket.io-client';
+import PropTypes from 'prop-types';
 import GuestSongResults from './GuestSongResults';
 
-
-const spotifyApi = new SpotifyWebApi();
-
+// Code for getting playlistID from URL -- should find better way
 const url = window.location.href;
 const index = window.location.href.indexOf('mend/');
-const me = url.substring(index+5);
+const idURL = url.substring(index + 5);
 
 class Guest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      change: false,
-      playlistID: me,
+      playlistID: idURL,
       currentSongs: [],
     };
     this.musicInstance = this.props.musicInstance;
     this.getTracks = this.getTracks.bind(this);
     this.recommendMe = this.recommendMe.bind(this);
+    this.handleEnterPress = this.handleEnterPress.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('keypress', this.handleEnterPress);
   }
 
   getTracks() {
-    // can get more from 'next' in response
     const fillin = document.getElementById('text2').value;
-    this.musicInstance.api.search(fillin)
+    this.musicInstance.api.search(fillin, { limit: 20, types: 'songs' })
       .then((response) => {
         const objects = [];
         for (let i = 0; i < response.songs.data.length; i += 1) {
@@ -44,17 +44,25 @@ class Guest extends Component {
       });
   }
 
-  recommendMe(id, name, artist) {
-    const socket = socketIOClient('http://localhost:5555');
+  handleEnterPress(event) {
+    if (event.key === 'Enter') {
+      this.getTracks();
+    }
+  }
 
-    socket.emit('newSong', id, this.state.playlistID, function (canRecommend) {
-      if (canRecommend) {
-        alert(`Your recommendation of ${name} by ${artist} has been sent!`);
-      } else {
-        alert('ALERT: Your recommendation was not sent. You have exceeeded the maximum number of recommendations.');
-      }
-      socket.close();
-    });
+  recommendMe(songID, name, artist) {
+    const playlistID = this.state.playlistID;
+    fetch('/recommend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        songID: songID,
+        playlistID: playlistID,
+      }),
+    }).then(alert(`Your recommendation of ${name} by ${artist} has been sent!`));
   }
 
   render() {
@@ -79,6 +87,10 @@ class Guest extends Component {
     );
   }
 }
+
+Guest.propTypes = {
+  musicInstance: PropTypes.object.isRequired,
+};
 
 
 export default Guest;

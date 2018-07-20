@@ -16,9 +16,9 @@ const musicInstance = AppleMusicAuth.getMusicInstance();
 ReactDOM.render(
   <Router>
     <div>
-      <Route exact path="/" render={(props) => ( <Home musicInstance={musicInstance}/> )} />
+      <Route exact path="/" render={() => <Home musicInstance={musicInstance} />} />
       <Route path="/host" component={Host} />
-      <Route path="/recommend" render={(props) => ( <Guest musicInstance={musicInstance}/> )} />
+      <Route path="/recommend" render={() => <Guest musicInstance={musicInstance} />} />
       <Route path="/about" component={About} />
     </div>
   </Router>,

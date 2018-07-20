@@ -1,18 +1,15 @@
-const express = require('express')
-const http = require('http')
-const socketIO = require('socket.io')
+const express = require('express');
+const http = require('http');
 
 // our localhost port
-const port = 5555
+const port = 5555;
 
-const app = express()
+const app = express();
+
+app.use(express.json());
 
 // our server instance
-const server = http.createServer(app)
-
-// This creates our socket using the instance of the server
-const io = socketIO(server)
-
+const server = http.createServer(app);
 
 /*
   CODE FOR STORING RECOMMENDATIONS
@@ -20,55 +17,47 @@ const io = socketIO(server)
 
 var recMap = new Map(); //key: codes; values: strings of song ids
 
-io.on('connection', socket => {
+/*
+  ------------------------------------------------------------------------
+*/
 
-  socket.on('newSong', function(id, code, callback) {
-      if (typeof recMap.get(code) === 'undefined') {
-        // set the code to map to an array holding just the code
-        recMap.set(code, [id]);
-      } else {
-        let array = recMap.get(code);
-        if (!array.includes(id)) {
-          array.push(id);
-          recMap.set(code, array);
-        }
-      }
-  })
-
-  socket.on('refresh', (code) => {
-
-    socket.emit('recommended', {list: recMap.get(code)});
-
-
-  })
-
-  socket.on('host settings', (code, limit) => {
-
-    settingsMap.set(code, {limit: limit});
-
-  })
-
-  socket.on('delete song', (id, code) => {
-
-    let array = recMap.get(id);
-    let index = array.indexOf(code);
-
-    if (index > -1) {
-      if (array.length === 1) {
-        recMap.set(id, []);
-      } else {
-        array.splice(index, 1)
-        recMap.set(id, array);
-      }
+app.post('/recommend', (req, res) => {
+  songID = req.body.songID;
+  playlistID = req.body.playlistID;
+  if (typeof recMap.get(playlistID) === 'undefined') {
+    recMap.set(playlistID, [songID]); // set the code to map to an array holding just the code
+  } else {
+    let array = recMap.get(playlistID);
+    if (!array.includes(songID)) {
+      array.push(songID);
+      recMap.set(playlistID, array);
     }
+  }
+  console.log(recMap.get(playlistID))
+});
 
 
-  })
+app.post('/receive', (req, res) => {
+  playlistID = req.body.playlistID;
+  res.send({list: recMap.get(playlistID)});
+});
 
-  // disconnect is fired when a client leaves the server
-  socket.on('disconnect', () => {
-    //code for when a client disconnects is here
-  })
-})
+
+app.post('/delete', (req, res) => {
+  songID = req.body.songID;
+  playlistID = req.body.playlistID;
+
+  let array = recMap.get(playlistID);
+  let index = array.indexOf(songID);
+
+  if (index > -1) {
+    if (array.length === 1) {
+      recMap.set(playlistID, []);
+    } else {
+      array.splice(index, 1)
+      recMap.set(playlistID, array);
+    }
+  }
+});
 
 server.listen(port, () => console.log(`Listening on port ${port}`))

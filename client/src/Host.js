@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import './css/Host.css';
-import SpotifyWebApi from 'spotify-web-api-js';
 import PropTypes from 'prop-types';
-import socketIOClient from 'socket.io-client';
 import Playlists from './Playlists';
 import HostSongResults from './HostSongResults';
-
-const spotifyApi = new SpotifyWebApi();
 
 class Host extends Component {
   constructor(props) {
     super(props);
     this.state = {
       playlists: [],
-      autoAdd: false,
-      limit: 0,
       playlistID: null,
+      limit: 0,
       takeRecommendations: false,
       recommendedSongs: [],
     };
@@ -25,46 +20,28 @@ class Host extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
-    this.findDetails = this.findDetails.bind(this);
   }
 
   componentDidMount() {
-    this.getPlaylists()
+    this.getPlaylists();
   }
 
   getPlaylists() {
     this.musicInstance.api.library.playlists()
-    .then((response) => {
-      const playlists1 = [];
-      for (let i = 0; i < response.length; i += 1) {
-        const obj = {
-          name: response[i].attributes.name,
-          id: response[i].id,
-          key: i,
-          artwork: response[i].attributes.artwork.url,
-        };
-        playlists1.push(obj);
-      }
-      this.setState({ playlists: playlists1 });
-    });
-  }
-    /*
-    spotifyApi.getUserPlaylists()
       .then((response) => {
         const playlists1 = [];
-        for (let i = 0; i < response.items.length; i += 1) {
+        for (let i = 0; i < response.length; i += 1) {
           const obj = {
-            name: response.items[i].name,
-            id: response.items[i].id,
+            name: response[i].attributes.name,
+            id: response[i].id,
             key: i,
-            images: response.items[i].images,
-            tracks: response.items[i].tracks,
+            artwork: response[i].attributes.artwork.url,
           };
           playlists1.push(obj);
         }
         this.setState({ playlists: playlists1 });
       });
-      */
+  }
 
   handleChange(event) {
     this.setState({ limit: event.target.value });
@@ -75,64 +52,60 @@ class Host extends Component {
     if (temp === null) {
       alert('You must select a playlist!');
     } else {
-      this.setState({ playlistID: temp.value });
+      this.setState({ playlistID: temp.value.substring(2) });
       this.setState({ takeRecommendations: true });
 
-      const limit = this.state.limit;
 
-      const socket = socketIOClient('http://localhost:5555');
-
-      socket.emit('host settings', this.state.playlistID, limit, function () {
-        socket.close();
-      });
+      // send lobby settings below:
     }
   }
 
 
   refresh() {
-    // eslint-disable-next-line
-    Array.prototype.diff = function(a) {
-      return this.filter(function (i) { return a.indexOf(i) < 0; });
-    };
-
-    const socket = socketIOClient('http://localhost:5555');
-
-    socket.emit('refresh', this.state.playlistID);
+    const playlistID = this.state.playlistID;
 
     if (this.state.takeRecommendations) {
-      socket.on('recommended', (resp) => {
-        if (resp.list) {
-          const songs = [];
-          for (let i = 0; i < resp.list.length; i += 1) {
-            const songID = resp.list[i];
-            spotifyApi.getTrack(songID)
-              .then((response) => {
-                const name = response.name;
-                const artist = response.artists[0].name;
-                const pushMe = {
-                  name: name,
-                  artist: artist,
-                  songID: songID,
-                };
-                songs.push(pushMe);
-                this.setState({ recommendedSongs: songs });
-                // aware this couldn't be dumber, will fix on Apple Music conversion
-              });
+      fetch('/receive', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          playlistID: playlistID,
+        }),
+      }).then(response => response.json())
+        .then((resp) => {
+          if (resp.list) {
+            const songs = [];
+            for (let i = 0; i < resp.list.length; i += 1) {
+              const songID = resp.list[i];
+              this.musicInstance.api.song(songID)
+                .then((response) => {
+                  const name = response.attributes.name;
+                  const artist = response.attributes.artistName;
+                  const pushMe = {
+                    name: name,
+                    artist: artist,
+                    songID: songID,
+                  };
+                  songs.push(pushMe);
+                  this.setState({ recommendedSongs: songs });
+                  // aware this couldn't be dumber, will fix on Apple Music conversion
+                });
+            }
           }
-        }
-        socket.close();
-      });
+        });
     }
   }
 
   addMe(event, songID, name, artist) {
-    const uris = [`spotify:track:${songID}`];
+    // this.musicInstance.library.api.addToLibrary(songID);
+    this.musicInstance.setQueue({
+      album: '1025210938',
+    });
 
-    spotifyApi.getMe()
-      .then((response) => {
-        const userID = response.id;
-        spotifyApi.addTracksToPlaylist(userID, this.state.playlistID, uris);
-      });
+    this.musicInstance.play();
 
     alert(`${name} by ${artist} has been added to your playlist!`);
 
@@ -141,13 +114,20 @@ class Host extends Component {
   }
 
   deleteMe(event, songID) {
-    // code to delete from server
-    const socket = socketIOClient('http://localhost:5555');
-    socket.emit('delete song', this.state.playlistID, songID, function () {
-      socket.close();
+    const playlistID = this.state.playlistID;
+    fetch('/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        songID: songID,
+        playlistID: playlistID,
+      }),
     });
 
-    // code to delete from frontend
+    // code to delete from frontend -- maybe only delete if know deleted from database
     const parent = event.target.parentElement;
     let temp = parent.firstChild;
     while (temp) {
@@ -155,16 +135,6 @@ class Host extends Component {
       temp = parent.firstChild;
     }
   }
-
-  findDetails(songID) {
-    spotifyApi.getTrack(songID)
-      .then((response) => {
-        const name = response.name;
-        const artist = response.artists[0].name;
-        return [name, artist];
-      });
-  }
-
 
   render() {
     let viewer;
@@ -235,7 +205,7 @@ class Host extends Component {
                         <p id="maxSpan">
                           <b>
                             <i>
-                              {'Note:'}
+                              {'Note: '}
                             </i>
                           </b>
                           {'The default value of 0 is no limit.'}
@@ -263,10 +233,10 @@ class Host extends Component {
           <div className="code">
             {'Your lobby\'s code:'}
             <a href={`localhost:3000/recommend/${this.state.playlistID}`}>
-            <span className="code2">
-              {this.state.playlistID}
-            </span>
-          </a>
+              <span className="code2">
+                {this.state.playlistID}
+              </span>
+            </a>
           </div>
           <hr className="divider" />
           <div className="topPart">

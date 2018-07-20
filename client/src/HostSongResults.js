@@ -16,7 +16,6 @@ const HostSongResults = props => (
 
 HostSongResults.propTypes = {
   recommendedSongs: PropTypes.array.isRequired,
-  playlist: PropTypes.string.isRequired,
   addMe: PropTypes.func.isRequired,
   deleteMe: PropTypes.func.isRequired,
 };

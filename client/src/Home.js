@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
 import co from 'co';
+import PropTypes from 'prop-types';
 import Host from './Host';
 import './css/Home.css';
 
-class TestHome extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,17 +50,20 @@ class TestHome extends Component {
             Click here to learn more.
           </a>
         </div>
-        <a onClick={this.login}>
-          <div id="hostButton">
+        <div id="hostButton" onClick={this.login}>
             Host
-          </div>
-        </a>
-        <a onClick={this.logout}> Hi
-        </a>
+        </div>
+        <div onClick={this.logout}>
+          Logout
+        </div>
       </div>
     );
   }
 }
 
+Home.propTypes = {
+  musicInstance: PropTypes.object.isRequired,
+};
 
-export default TestHome;
+
+export default Home;

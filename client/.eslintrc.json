@@ -19,6 +19,7 @@
       "no-param-reassign": [2, {
             "props": false
       }],
-      "react/forbid-prop-types": 0
+      "react/forbid-prop-types": 0,
+      "quote-props": ["error", "consistent"]
     }
 }
