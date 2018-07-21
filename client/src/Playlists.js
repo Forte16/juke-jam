@@ -22,6 +22,9 @@ const Playlists = props => (
                 &#9835;
                 {` ${playlist.name}`}
               </div>
+              <div className="playlistRightInners italicize">
+                {` ${playlist.tracks} tracks`}
+              </div>
               <div className="playlistRightInners">
                 <i>
                 </i>

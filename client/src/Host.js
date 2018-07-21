@@ -30,17 +30,23 @@ class Host extends Component {
   getPlaylists() {
     this.musicInstance.api.library.playlists()
       .then((response) => {
-        const playlists1 = [];
+        const ids = [];
         for (let i = 0; i < response.length; i += 1) {
-          const obj = {
-            name: response[i].attributes.name,
-            id: response[i].id,
-            key: i,
-            artwork: response[i].attributes.artwork.url,
-          };
-          playlists1.push(obj);
+          ids.push(response[i].id);
         }
-        this.setState({ playlists: playlists1 });
+        for (let i = 0; i < response.length; i += 1) {
+          this.musicInstance.api.library.playlist(ids[i])
+            .then((playlist) => {
+              const obj = {
+                name: playlist.attributes.name,
+                id: playlist.id,
+                key: i,
+                artwork: window.MusicKit.formatArtworkURL(playlist.attributes.artwork),
+                tracks: playlist.relationships.tracks.data.length,
+              };
+              this.setState({ playlists: [...this.state.playlists, obj] });
+            });
+        }
       });
   }
 
@@ -180,7 +186,7 @@ class Host extends Component {
                 {'Select the settings for your Juke Jam party!'}
               </div>
               <div>
-                Not your playlists?
+                {'Not your playlists?'}
                 <span className="customBtn2 logout" onClick={this.logout}>
                   {'Logout'}
                 </span>

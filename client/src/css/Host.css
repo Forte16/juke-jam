@@ -192,3 +192,7 @@ div, button {
 .logout {
   margin-left: 7px;
 }
+
+.italicize {
+  font-style: italic;
+}
