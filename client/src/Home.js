@@ -12,7 +12,6 @@ class Home extends Component {
     };
     this.musicInstance = this.props.musicInstance;
     this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
   }
 
   login() {
@@ -25,13 +24,8 @@ class Home extends Component {
     });
   }
 
-  logout() {
-    this.musicInstance.unauthorize();
-  }
-
   render() {
-
-    if (this.state.isLoggedIn) {
+    if (this.musicInstance.isAuthorized) {
       return (
         <Host musicInstance={this.musicInstance} />
       );
@@ -52,9 +46,6 @@ class Home extends Component {
         </div>
         <div id="hostButton" onClick={this.login}>
             Host
-        </div>
-        <div onClick={this.logout}>
-          Logout
         </div>
       </div>
     );

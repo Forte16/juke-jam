@@ -20,7 +20,7 @@ class Host extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
-    this.getLink = this.getLink.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
@@ -60,7 +60,6 @@ class Host extends Component {
       // send lobby settings below:
     }
   }
-
 
   refresh() {
     const playlistID = this.state.playlistID;
@@ -129,7 +128,7 @@ class Host extends Component {
   }
 
   formatArtworkURL(url, height, width) {
-    return this.musicInstance.formatArtworkURL(url, width, width);
+    return this.musicInstance.formatArtworkURL(url, height, width);
   }
 
   deleteMe(event, songID) {
@@ -155,19 +154,21 @@ class Host extends Component {
     }
   }
 
-  getLink() {
-    const copyText = document.getElementById("linkInput");
-
-    /* Select the text field */
+  static getLink() {
+    const copyText = document.getElementById('linkInput');
     copyText.select();
+    document.execCommand('copy');
+  }
 
-    /* Copy the text inside the text field */
-    document.execCommand("copy");
-
-    // should indicate that it has been copied
+  logout() {
+    this.musicInstance.unauthorize().then(() => this.forceUpdate());
   }
 
   render() {
+    if (!this.musicInstance.isAuthorized) {
+      window.location.reload();
+    }
+
     let viewer;
 
     if (!this.state.takeRecommendations) {
@@ -177,6 +178,12 @@ class Host extends Component {
             <div className="Top">
               <div className="words">
                 {'Select the settings for your Juke Jam party!'}
+              </div>
+              <div>
+                Not your playlists?
+                <span className="customBtn2 logout" onClick={this.logout}>
+                  {'Logout'}
+                </span>
               </div>
               <hr className="divider4" />
             </div>
@@ -266,7 +273,7 @@ class Host extends Component {
               {'Users can send you recommendations at this link:'}
             </div>
             <input type="text" value={`http://localhost:3000/recommend/${this.state.playlistID}`} id="linkInput" readonly />
-            <div onClick={this.getLink}>
+            <div onClick={Host.getLink}>
               {'Copy link'}
             </div>
           </div>

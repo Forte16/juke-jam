@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Host from './Host';
 import Guest from './Guest';
 import About from './About';
 import Home from './Home';
@@ -17,7 +16,6 @@ ReactDOM.render(
   <Router>
     <div>
       <Route exact path="/" render={() => <Home musicInstance={musicInstance} />} />
-      <Route path="/host" component={Host} />
       <Route path="/recommend" render={() => <Guest musicInstance={musicInstance} />} />
       <Route path="/about" component={About} />
     </div>

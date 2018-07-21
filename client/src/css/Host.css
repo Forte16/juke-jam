@@ -188,3 +188,7 @@ div, button {
   text-align: center;
   margin-top: 15px;
 }
+
+.logout {
+  margin-left: 7px;
+}
