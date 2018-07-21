@@ -20,6 +20,7 @@ class Host extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
+    this.getLink = this.getLink.bind(this);
   }
 
   componentDidMount() {
@@ -52,7 +53,7 @@ class Host extends Component {
     if (temp === null) {
       alert('You must select a playlist!');
     } else {
-      this.setState({ playlistID: temp.value.substring(2) });
+      this.setState({ playlistID: temp.value });
       this.setState({ takeRecommendations: true });
 
 
@@ -100,17 +101,35 @@ class Host extends Component {
   }
 
   addMe(event, songID, name, artist) {
-    // this.musicInstance.library.api.addToLibrary(songID);
-    this.musicInstance.setQueue({
-      album: '1025210938',
-    });
+    const playlistID = this.state.playlistID;
+    const tracks = [songID];
 
-    this.musicInstance.play();
+    fetch(`https://api.music.apple.com/v1/me/library/playlists/${playlistID}/tracks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.musicInstance.developerToken}`,
+        'Music-User-Token': this.musicInstance.musicUserToken,
+      },
+      body: {
+        data: { 'song': songID },
+      },
+    }).then(response => response.json())
+      .then(resp => console.log(resp));
+
+
+    // this.musicInstance.api.addToLibrary({ 'songs': [songID] });
+
 
     alert(`${name} by ${artist} has been added to your playlist!`);
 
     // delete the song after adding it
     this.deleteMe(event);
+  }
+
+  formatArtworkURL(url, height, width) {
+    return this.musicInstance.formatArtworkURL(url, width, width);
   }
 
   deleteMe(event, songID) {
@@ -134,6 +153,18 @@ class Host extends Component {
       parent.removeChild(temp);
       temp = parent.firstChild;
     }
+  }
+
+  getLink() {
+    const copyText = document.getElementById("linkInput");
+
+    /* Select the text field */
+    copyText.select();
+
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+
+    // should indicate that it has been copied
   }
 
   render() {
@@ -231,12 +262,13 @@ class Host extends Component {
       viewer = (
         <div>
           <div className="code">
-            {'Your lobby\'s code:'}
-            <a href={`localhost:3000/recommend/${this.state.playlistID}`}>
-              <span className="code2">
-                {this.state.playlistID}
-              </span>
-            </a>
+            <div>
+              {'Users can send you recommendations at this link:'}
+            </div>
+            <input type="text" value={`http://localhost:3000/recommend/${this.state.playlistID}`} id="linkInput" readonly />
+            <div onClick={this.getLink}>
+              {'Copy link'}
+            </div>
           </div>
           <hr className="divider" />
           <div className="topPart">
