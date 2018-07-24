@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './css/Guest.css';
+import './css/tailwind.css';
 
 import { Row, Col } from 'react-bootstrap';
 import emptyPic from './pics/empty.png';

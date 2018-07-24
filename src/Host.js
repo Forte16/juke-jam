@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './css/Host.css';
+import './css/tailwind.css';
 import PropTypes from 'prop-types';
 import Playlists from './Playlists';
 import HostSongResults from './HostSongResults';

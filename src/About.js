@@ -1,5 +1,6 @@
 import React from 'react';
 import './css/About.css';
+import './css/tailwind.css';
 
 const About = () => (
   <div className="main2">

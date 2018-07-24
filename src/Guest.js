@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import './css/Guest.css';
 import PropTypes from 'prop-types';
 import GuestSongResults from './GuestSongResults';
+import './css/Guest.css';
+import './css/tailwind.css';
 
 // Code for getting playlistID from URL -- should find better way
 const url = window.location.href;

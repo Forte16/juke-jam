@@ -3,6 +3,7 @@ import co from 'co';
 import PropTypes from 'prop-types';
 import Host from './Host';
 import './css/Home.css';
+import './css/tailwind.css';
 
 class Home extends Component {
   constructor(props) {
