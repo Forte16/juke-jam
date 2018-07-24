@@ -4,16 +4,11 @@ import GuestSongResults from './GuestSongResults';
 import './css/Guest.css';
 import './css/tailwind.css';
 
-// Code for getting playlistID from URL -- should find better way
-const url = window.location.href;
-const index = window.location.href.indexOf('mend/');
-const idURL = url.substring(index + 5);
-
 class Guest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playlistID: idURL,
+      playlistID: '',
       currentSongs: [],
     };
     this.musicInstance = this.props.musicInstance;
@@ -24,6 +19,12 @@ class Guest extends Component {
 
   componentDidMount() {
     window.addEventListener('keypress', this.handleEnterPress);
+
+    // Code for getting playlistID from URL
+    const url = window.location.href;
+    const index = window.location.href.indexOf('mend/');
+    const idURL = url.substring(index + 5);
+    this.setState({ playlistID: idURL });
   }
 
   getTracks() {
