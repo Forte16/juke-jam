@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import './css/Guest.css';
 import './css/tailwind.css';
 
-const HostSongResults = props => (
+const HostSongResults = ({ addMe, deleteMe, recommendedSongs }) => (
   <div className="recommendedSongs">
-    {props.recommendedSongs.map(song => (
+    {recommendedSongs.map(song => (
       <div className="selections" key={song.songID}>
         {`${song.name} by ${song.artist}`}
-        <input type="button" value="Add" className="recommendMe customBtn2" onClick={(event) => props.addMe(event, song.songID, song.name, song.artist)} />
-        <input type="button" value="Delete" className="deleteMe customBtn2" onClick={(event) => props.deleteMe(event, song.songID)} />
+        <input type="button" value="Add" className="recommendMe customBtn2" onClick={event => addMe(event, song.songID, song.name, song.artist)} />
+        <input type="button" value="Delete" className="deleteMe customBtn2" onClick={event => deleteMe(event, song.songID)} />
       </div>
     ))}
   </div>
