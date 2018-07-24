@@ -1,0 +1,13 @@
+{
+    "extends": "stylelint-config-standard",
+    "ignoreFiles": "",
+    "rules": {
+        "at-rule-no-unknown": [ true, {
+            "ignoreAtRules": ["responsive", "screen", "tailwind"]
+        } ],
+        "indentation": 2,
+        "no-descending-specificity": null,
+        "no-duplicate-selectors": null,
+        "comment-empty-line-before": null
+    }
+}
