@@ -26,10 +26,6 @@ const Playlists = props => (
               <div className="playlistRightInners italicize">
                 {` ${playlist.tracks} tracks`}
               </div>
-              <div className="playlistRightInners">
-                <i>
-                </i>
-              </div>
             </span>
           </Col>
         );
