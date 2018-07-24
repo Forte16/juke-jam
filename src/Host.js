@@ -28,6 +28,12 @@ class Host extends Component {
     this.getPlaylists();
   }
 
+  static getLink() {
+    const copyText = document.getElementById('linkInput');
+    copyText.select();
+    document.execCommand('copy');
+  }
+
   getPlaylists() {
     this.musicInstance.api.library.playlists()
       .then((response) => {
@@ -161,12 +167,6 @@ class Host extends Component {
     }
   }
 
-  static getLink() {
-    const copyText = document.getElementById('linkInput');
-    copyText.select();
-    document.execCommand('copy');
-  }
-
   logout() {
     this.musicInstance.unauthorize().then(() => this.forceUpdate());
   }
@@ -188,9 +188,7 @@ class Host extends Component {
               </div>
               <div>
                 {'Not your playlists?'}
-                <span className="customBtn2 logout" onClick={this.logout}>
-                  {'Logout'}
-                </span>
+                <input type="button" value="Logout" className="customBtn2 logout" onClick={this.logout} />
               </div>
               <hr className="divider4" />
             </div>
@@ -280,9 +278,7 @@ class Host extends Component {
               {'Users can send you recommendations at this link:'}
             </div>
             <input type="text" value={`http://localhost:3000/recommend/${this.state.playlistID}`} id="linkInput" readOnly />
-            <div onClick={Host.getLink}>
-              {'Copy link'}
-            </div>
+            <input type="button" value="Copy link" onClick={Host.getLink} />
           </div>
           <hr className="divider" />
           <div className="topPart">
