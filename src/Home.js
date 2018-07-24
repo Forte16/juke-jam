@@ -9,7 +9,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false,
+
     };
     this.musicInstance = this.props.musicInstance;
     this.login = this.login.bind(this);
@@ -18,10 +18,7 @@ class Home extends Component {
   login() {
     const that = this;
     co(function* () {
-      const key = yield that.musicInstance.authorize();
-      if (key) {
-        that.setState({ isLoggedIn: true });
-      }
+      yield that.musicInstance.authorize();
     });
   }
 
@@ -45,9 +42,7 @@ class Home extends Component {
             Click here to learn more.
           </a>
         </div>
-        <div id="hostButton" onClick={this.login}>
-            Host
-        </div>
+        <input type="button" id="hostButton" value="Host" onClick={this.login} />
       </div>
     );
   }
