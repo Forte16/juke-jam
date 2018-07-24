@@ -16,9 +16,13 @@ const HostSongResults = props => (
 );
 
 HostSongResults.propTypes = {
-  recommendedSongs: PropTypes.array.isRequired,
+  recommendedSongs: PropTypes.array,
   addMe: PropTypes.func.isRequired,
   deleteMe: PropTypes.func.isRequired,
+};
+
+HostSongResults.defaultProps = {
+  recommendedSongs: [],
 };
 
 export default HostSongResults;
