@@ -94,7 +94,6 @@ class Lobby extends Component {
 
   addMe(event, songID, name, artist) {
     const playlistID = this.state.playlistID;
-    const tracks = [songID];
 
     fetch(`https://api.music.apple.com/v1/me/library/playlists/${playlistID}/tracks`, {
       method: 'POST',
@@ -105,14 +104,13 @@ class Lobby extends Component {
         'Music-User-Token': this.musicInstance.musicUserToken,
       },
       body: {
-        data: { 'song': songID },
+        'data': [{
+          'id': songID,
+          'type': 'library-songs',
+        }],
       },
     }).then(response => response.json())
       .then(resp => console.log(resp));
-
-
-    // this.musicInstance.api.addToLibrary({ 'songs': [songID] });
-
 
     alert(`${name} by ${artist} has been added to your playlist!`);
 
