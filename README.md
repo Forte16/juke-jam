@@ -1,5 +1,7 @@
 # Juke Jam
 
+[![Build Status](https://travis-ci.com/forte/juke-jam.svg?token=759c3Sz9dwdshoUPwoqG&branch=master)](https://travis-ci.com/forte/juke-jam)
+
 TO DO:
 1. Change from Spotify to Apple Music
 2. Add database.
