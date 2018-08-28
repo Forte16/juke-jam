@@ -45,28 +45,27 @@ class Lobby extends Component {
       body: JSON.stringify({
         playlistID: playlistID,
       }),
-    }).then(response => response.json())
-      .then((resp) => {
-        if (resp.list) {
-          const songs = [];
-          for (let i = 0; i < resp.list.length; i += 1) {
-            const songID = resp.list[i];
-            this.musicInstance.api.song(songID)
-              .then((response) => {
-                const name = response.attributes.name;
-                const artist = response.attributes.artistName;
-                const pushMe = {
-                  name: name,
-                  artist: artist,
-                  songID: songID,
-                };
-                songs.push(pushMe);
-                this.setState({ recommendedSongs: songs });
-                // aware this couldn't be dumber, will fix on Apple Music conversion
-              });
-          }
+    }).then((resp) => {
+      if (resp.list) {
+        const songs = [];
+        for (let i = 0; i < resp.list.length; i += 1) {
+          const songID = resp.list[i];
+          this.musicInstance.api.song(songID)
+            .then((response) => {
+              const name = response.attributes.name;
+              const artist = response.attributes.artistName;
+              const pushMe = {
+                name: name,
+                artist: artist,
+                songID: songID,
+              };
+              songs.push(pushMe);
+              this.setState({ recommendedSongs: songs });
+              // aware this couldn't be dumber, will fix on Apple Music conversion
+            });
         }
-      });
+      }
+    });
   }
 
   deleteMe(event, songID) {

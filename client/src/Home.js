@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import co from 'co';
 import PropTypes from 'prop-types';
-import Host from './Host';
+import Host from './Host'; // eslint-disable-line
 import './css/Home.css';
 import './css/tailwind.css';
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      authorized: false,
-    };
     this.musicInstance = this.props.musicInstance;
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
@@ -19,18 +16,12 @@ class Home extends Component {
     this.joinLobby = this.joinLobby.bind(this);
   }
 
-  componentDidMount() {
-    if (this.musicInstance.isAuthorized) {
-      this.setState({ authorized: true});
-    }
-  }
-
   login() {
     const that = this;
     co(function* () {
       const key = yield that.musicInstance.authorize();
       if (key) {
-        that.setState({ authorized: true });
+        that.forceUpdate();
       }
     });
   }
@@ -96,6 +87,7 @@ class Home extends Component {
 
 Home.propTypes = {
   musicInstance: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 

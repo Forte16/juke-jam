@@ -19,7 +19,13 @@ class Host extends Component {
   }
 
   componentDidMount() {
-    this.getPlaylists();
+    if (this.musicInstance.isAuthorized) {
+      this.getPlaylists();
+    } else {
+      this.props.history.push({
+        pathname: '/',
+      });
+    }
   }
 
   getPlaylists() {
@@ -67,7 +73,11 @@ class Host extends Component {
 
 
   logout() {
-    this.musicInstance.unauthorize().then(() => this.forceUpdate());
+    this.musicInstance.unauthorize().then(() => {
+      this.props.history.push({
+        pathname: '/',
+      });
+    });
   }
 
   render() {
@@ -173,6 +183,7 @@ class Host extends Component {
 
 Host.propTypes = {
   musicInstance: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default withRouter(Host);
