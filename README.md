@@ -4,3 +4,4 @@
 
 ### Future Additions:
 1. Set max recommendations per person.
+2. Add the ability to "clear" a session.
