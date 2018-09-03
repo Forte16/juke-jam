@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import './css/Host.css';
-import './css/tailwind.css';
+import '../css/Host.css';
+import '../css/tailwind.css';
 import PropTypes from 'prop-types';
-import Playlists from './Playlists';
+import Playlists from '../presentational/Playlists';
 
 class Host extends Component {
   constructor(props) {
@@ -61,8 +61,19 @@ class Host extends Component {
     if (temp === null) {
       alert('You must select a playlist!');
     } else {
-      this.props.history.push({
-        pathname: `/host/lobby/${temp.value}`,
+      fetch('http://localhost:5555/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          playlistID: temp.value,
+        }),
+      }).then(() => {
+        this.props.history.push({
+          pathname: `/host/lobby/${temp.value}`,
+        });
       });
     }
   }

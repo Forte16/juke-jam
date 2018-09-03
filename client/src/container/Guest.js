@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import GuestSongResults from './GuestSongResults';
-import './css/Guest.css';
-import './css/tailwind.css';
+import GuestSongResults from '../presentational/GuestSongResults';
+import '../css/Guest.css';
+import '../css/tailwind.css';
 
 class Guest extends Component {
   constructor(props) {
@@ -54,7 +54,7 @@ class Guest extends Component {
 
   recommendMe(songID, name, artist) {
     const playlistID = this.state.playlistID;
-    fetch('/recommend', {
+    fetch('http://localhost:5555/recommend', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

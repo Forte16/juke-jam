@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "express": "~4.16.0",
-    "jsonwebtoken": "^8.3.0"
+    "jsonwebtoken": "^8.3.0",
+    "knex": "^0.15.2",
+    "pg": "^7.4.3"
   },
   "devDependencies": {
     "concurrently": "^3.6.0",

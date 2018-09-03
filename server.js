@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
+const store = require('./backend/store');
 
 const port = process.env.PORT || 5555;
 const app = express();
@@ -18,57 +19,52 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-
-/*
-  CODE FOR STORING RECOMMENDATIONS
-*/
-
-var recMap = new Map(); // key: codes; values: strings of song ids
-
-/*
-  ------------------------------------------------------------------------
-*/
+app.post('/create', (req, res) => {
+  const lobbyID = req.body.playlistID;
+  store.newLobby({ lobbyID }).then(() => res.sendStatus(200));
+});
 
 app.post('/recommend', (req, res) => {
   const songID = req.body.songID;
-  const playlistID = req.body.playlistID;
-  if (typeof recMap.get(playlistID) === 'undefined') {
-    recMap.set(playlistID, [songID]); // set the code to map to an array holding just the code
-  } else {
-    const array = recMap.get(playlistID);
-    if (!array.includes(songID)) {
-      array.push(songID);
-      recMap.set(playlistID, array);
-    }
-  }
-});
+  const lobbyID = req.body.playlistID;
 
+  store.getRecommendations({ lobbyID }).then((result) => {
+    const recommendations = result[0].recommendations;
+    if (!recommendations.includes(songID)) {
+      recommendations.push(songID);
+      store.setRecommendations({ lobbyID, recommendations }).then(() => res.sendStatus(200));
+    }
+  });
+});
 
 app.post('/receive', (req, res) => {
-  const playlistID = req.body.playlistID;
-  res.send({ list: recMap.get(playlistID) });
+  const lobbyID = req.body.playlistID;
+  store.getRecommendations({ lobbyID }).then((result) => {
+    res.send({ list: result[0].recommendations });
+  });
 });
 
-
 app.post('/delete', (req, res) => {
-  songID = req.body.songID;
-  playlistID = req.body.playlistID;
+  const songID = req.body.songID;
+  const lobbyID = req.body.playlistID;
 
-  let array = recMap.get(playlistID);
-  let index = array.indexOf(songID);
-
-  if (index > -1) {
-    if (array.length === 1) {
-      recMap.set(playlistID, []);
-    } else {
-      array.splice(index, 1)
-      recMap.set(playlistID, array);
+  store.getRecommendations({ lobbyID }).then((result) => {
+    let recommendations = result[0].recommendations;
+    const index = recommendations.indexOf(songID);
+    if (index > -1) {
+      if (recommendations.length === 1) {
+        recommendations = [];
+        store.setRecommendations({ lobbyID, recommendations }).then(() => res.sendStatus(200));
+      } else {
+        recommendations.splice(index, 1);
+        store.setRecommendations({ lobbyID, recommendations }).then(() => res.sendStatus(200));
+      }
     }
-  }
+  });
 });
 
 app.get('*', (request, response) => {
   response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
-server.listen(port, () => console.log(`Listening on port ${port}`))
+server.listen(port, () => console.log(`Listening on port ${port}`));

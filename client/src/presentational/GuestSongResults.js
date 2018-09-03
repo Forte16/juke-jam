@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './css/Guest.css';
-import './css/tailwind.css';
+import '../css/Guest.css';
+import '../css/tailwind.css';
 
 const GuestSongResults = ({ currentSongs, recommendMe }) => (
   <div className="songsGuest">

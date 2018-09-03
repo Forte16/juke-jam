@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './css/Host.css';
-import './css/tailwind.css';
+import '../css/Host.css';
+import '../css/tailwind.css';
 import PropTypes from 'prop-types';
-import HostSongResults from './HostSongResults';
+import HostSongResults from '../presentational/HostSongResults';
 
 class Lobby extends Component {
   constructor(props) {
@@ -15,6 +15,8 @@ class Lobby extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
+    this.deleteDatabase = this.deleteDatabase.bind(this);
+    this.deleteFrontend = this.deleteFrontend.bind(this);
   }
 
   componentDidMount() {
@@ -36,7 +38,7 @@ class Lobby extends Component {
   refresh() {
     const playlistID = this.state.playlistID;
 
-    fetch('/receive', {
+    fetch('http://localhost:5555/receive', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,32 +47,33 @@ class Lobby extends Component {
       body: JSON.stringify({
         playlistID: playlistID,
       }),
-    }).then((resp) => {
-      if (resp.list) {
-        const songs = [];
-        for (let i = 0; i < resp.list.length; i += 1) {
-          const songID = resp.list[i];
-          this.musicInstance.api.song(songID)
-            .then((response) => {
-              const name = response.attributes.name;
-              const artist = response.attributes.artistName;
-              const pushMe = {
-                name: name,
-                artist: artist,
-                songID: songID,
-              };
-              songs.push(pushMe);
-              this.setState({ recommendedSongs: songs });
+    }).then(response => response.json())
+      .then((resp) => {
+        if (resp.list) {
+          const songs = [];
+          for (let i = 0; i < resp.list.length; i += 1) {
+            const songID = resp.list[i];
+            this.musicInstance.api.song(songID)
+              .then((response) => {
+                const name = response.attributes.name;
+                const artist = response.attributes.artistName;
+                const pushMe = {
+                  name: name,
+                  artist: artist,
+                  songID: songID,
+                };
+                songs.push(pushMe);
+                this.setState({ recommendedSongs: songs });
               // aware this couldn't be dumber, will fix on Apple Music conversion
-            });
+              });
+          }
         }
-      }
-    });
+      });
   }
 
-  deleteMe(event, songID) {
+  deleteDatabase(songID) {
     const playlistID = this.state.playlistID;
-    fetch('/delete', {
+    return fetch('http://localhost:5555/delete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,14 +84,20 @@ class Lobby extends Component {
         playlistID: playlistID,
       }),
     });
+  }
 
-    // code to delete from frontend -- maybe only delete if know deleted from database
+  static deleteFrontend(event) {
+    // code to delete from frontend
     const parent = event.target.parentElement;
     let temp = parent.firstChild;
     while (temp) {
       parent.removeChild(temp);
       temp = parent.firstChild;
     }
+  }
+
+  deleteMe(event, songID) {
+    this.deleteDatabase(songID).then(this.deleteFrontend(event));
   }
 
   addMe(event, songID, name, artist) {
