@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Guest from './Guest';
-import About from './About';
-import Home from './Home';
-import Host from './Host';
-import Lobby from './Lobby';
+import Guest from './container/Guest';
+import About from './presentational/About';
+import Home from './container/Home';
+import Host from './container/Host';
+import Lobby from './container/Lobby';
 import registerServiceWorker from './registerServiceWorker';
 import AppleMusicAuth from './AppleMusicAuth';
 
