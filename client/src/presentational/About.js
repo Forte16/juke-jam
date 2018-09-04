@@ -16,14 +16,14 @@ const About = () => (
       </div>
       <ol id="hostList">
         <li>
-          {'Login into Spotify to connect your account with Juke Jam.'}
+          {'Login into Apple Music to connect your account with Juke Jam.'}
         </li>
         <li>
           {'Select the playlist you would like to add recommendations to and set a '}
           {'limit for the maximum number of recommendations per person.'}
         </li>
         <li>
-          {'Give your unique 6 digit code to guests so they can begin recommending songs. '}
+          {'Send guests a link to your lobby so they can begin recommending songs. '}
         </li>
         <li>
           {'Click the "Refresh" button to see the latest list of recommended songs. '}
@@ -41,8 +41,7 @@ const About = () => (
           {'Login into Spotify to connect your account with Juke Jam. '}
         </li>
         <li>
-          {'Enter your host\'s unique 6 digit code. NOTE: You will be alerted if a '}
-          {'lobby has does not exist with the code you input.'}
+          {'Enter your host\'s unique code or receive a direct link from your host to their lobby.'}
         </li>
         <li>
           {'Search by song, artist, or album and see relevent tracks that can be '}

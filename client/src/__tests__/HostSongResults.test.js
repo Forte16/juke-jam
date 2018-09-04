@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import HostSongResults from '../HostSongResults';
+import HostSongResults from '../presentational/HostSongResults';
 
 it('should be selectable by class "foo"', function () {
   expect(shallow(<HostSongResults />).is('.recommendedSongs')).toBe(true);
