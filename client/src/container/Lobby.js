@@ -5,6 +5,16 @@ import PropTypes from 'prop-types';
 import HostSongResults from '../presentational/HostSongResults';
 
 class Lobby extends Component {
+  static deleteFrontend(event) {
+    // code to delete from frontend
+    const parent = event.target.parentElement;
+    let temp = parent.firstChild;
+    while (temp) {
+      parent.removeChild(temp);
+      temp = parent.firstChild;
+    }
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -84,16 +94,6 @@ class Lobby extends Component {
         playlistID: playlistID,
       }),
     });
-  }
-
-  static deleteFrontend(event) {
-    // code to delete from frontend
-    const parent = event.target.parentElement;
-    let temp = parent.firstChild;
-    while (temp) {
-      parent.removeChild(temp);
-      temp = parent.firstChild;
-    }
   }
 
   deleteMe(event, songID) {

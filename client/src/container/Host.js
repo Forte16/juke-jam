@@ -10,10 +10,8 @@ class Host extends Component {
     super(props);
     this.state = {
       playlists: [],
-      limit: 0,
     };
     this.musicInstance = this.props.musicInstance;
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -45,14 +43,10 @@ class Host extends Component {
                 artwork: window.MusicKit.formatArtworkURL(playlist.attributes.artwork),
                 tracks: playlist.relationships.tracks.data.length,
               };
-              this.setState({ playlists: [...this.state.playlists, obj] });
+              this.setState({ playlists: [...this.state.playlists, obj] }); // eslint-disable-line
             });
         }
       });
-  }
-
-  handleChange(event) {
-    this.setState({ limit: event.target.value });
   }
 
   handleSubmit() {
@@ -129,7 +123,7 @@ class Host extends Component {
                   <tr>
 
                     <td>
-                      <select id="select" className="form-control" onChange={this.handleChange}>
+                      <select id="select" className="form-control">
                         <option value={0}>
                           {'0'}
                         </option>
