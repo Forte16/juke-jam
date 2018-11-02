@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import '../css/Host.css';
 import MainButton from '../presentational/MainButton';
 import ButtonBar from '../presentational/ButtonBar';
+import RecommendedSong from '../presentational/RecommendedSong';
 import '../css/tailwind.css';
 import PropTypes from 'prop-types';
-import HostSongResults from '../presentational/HostSongResults';
 
 class Lobby extends Component {
   static deleteFrontend(event) {
@@ -148,14 +148,16 @@ class Lobby extends Component {
         <div className="topPart">
           {'Recommended songs from your friends:'}
         </div>
-
-        <HostSongResults
-          recommendedSongs={this.state.recommendedSongs}
-          addMe={this.addMe}
-          deleteMe={this.deleteMe}
-          playlist={this.state.playlist}
-        />
-
+        <div className="recommendedSongs">
+          {this.state.recommendedSongs.map((song, i) => (
+            <RecommendedSong
+              key={i}
+              addMe={this.addMe}
+              deleteMe={this.deleteMe}
+              song={song}
+            />
+          ))}
+        </div>
         <div className="socketBtnDiv">
           <MainButton
             clickFunc={this.refresh}

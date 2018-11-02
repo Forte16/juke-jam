@@ -14,6 +14,8 @@ const ButtonBar = props => (
 ButtonBar.propTypes = {
   textbarID: PropTypes.string.isRequired,
   clickFunc: PropTypes.func.isRequired,
+  textbarValue: PropTypes.string,
+  readOnly: PropTypes.bool,
   value: PropTypes.string.isRequired,
 };
 

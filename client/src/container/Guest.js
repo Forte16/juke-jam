@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import GuestSongResults from '../presentational/GuestSongResults';
+import GuestSongResult from '../presentational/GuestSongResult';
 import ButtonBar from '../presentational/ButtonBar';
 import '../css/Guest.css';
 import '../css/tailwind.css';
@@ -11,6 +11,8 @@ class Guest extends Component {
     this.state = {
       playlistID: '',
       currentSongs: [],
+      noResults: false,
+      spinner: false,
     };
     this.musicInstance = this.props.musicInstance;
     this.getTracks = this.getTracks.bind(this);
@@ -30,8 +32,19 @@ class Guest extends Component {
 
   getTracks() {
     const fillin = document.getElementById('text2').value;
+    if (!fillin) return;
+
+    this.setState({noResults: false});
+    this.setState({currentSongs: []});
+    this.setState({spinner: true});
+
     this.musicInstance.api.search(fillin, { limit: 20, types: 'songs' })
       .then((response) => {
+        this.setState({spinner: false});
+        if (response.songs === undefined) {
+          this.setState({noResults: true});
+          return;
+        }
         const objects = [];
         for (let i = 0; i < response.songs.data.length; i += 1) {
           const name = response.songs.data[i].attributes.name;
@@ -69,6 +82,28 @@ class Guest extends Component {
   }
 
   render() {
+    let noResults;
+    let spinner;
+
+    if (this.state.noResults) {
+      noResults = (
+        <div>
+          {'Sorry no results were found.'}
+        </div>
+      )
+    } else {
+      noResults = (<div/ >)
+    }
+
+    if (this.state.spinner) {
+      spinner = (
+        <div className="text-center">
+          <div className="spinner"/>
+        </div>
+      )
+    } else {
+      spinner = (<div/>)
+    }
     return (
       <div className="main">
         <div className="code">
@@ -86,9 +121,17 @@ class Guest extends Component {
           textbarID="text2"
           value="Search"
         />
-
-        <GuestSongResults currentSongs={this.state.currentSongs} recommendMe={this.recommendMe} />
-
+      {noResults}
+      {spinner}
+        <div className="songsGuest">
+          {this.state.currentSongs.map((song, i) => (
+            <GuestSongResult
+              key={i}
+              song={song}
+              recommendMe={this.recommendMe}
+            />
+          ))}
+        </div>
       </div>
     );
   }
