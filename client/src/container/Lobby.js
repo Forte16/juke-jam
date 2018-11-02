@@ -26,7 +26,6 @@ class Lobby extends Component {
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
     this.deleteDatabase = this.deleteDatabase.bind(this);
-    this.deleteFrontend = this.deleteFrontend.bind(this);
   }
 
   componentDidMount() {
