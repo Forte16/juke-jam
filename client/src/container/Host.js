@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import '../css/tailwind.css';
+import MainButton from '../presentational/MainButton';
+import MiniButton from '../presentational/MiniButton';
 import PropTypes from 'prop-types';
 import Playlists from '../presentational/Playlists';
 
@@ -102,8 +104,11 @@ class Host extends Component {
               {'Select the settings for your Juke Jam party!'}
             </div>
             <div>
-              {'Not your playlists?'}
-              <input type="button" value="Logout" className="customBtn2 logout" onClick={this.logout} />
+              <span className="mr-1">{'Not your playlists?'}</span>
+              <MiniButton
+                clickFunc={this.logout}
+                value="Logout"
+              />
             </div>
             <hr className="divider4" />
           </div>
@@ -175,11 +180,11 @@ class Host extends Component {
             </div>
           </div>
         </form>
-
         <div className="Bottom">
-          <button type="submit" onClick={this.handleSubmit} value="Submit" className="customBtn" id="btn">
-            {'Submit'}
-          </button>
+          <MainButton
+            clickFunc={this.handleSubmit}
+            value="Submit"
+          />
         </div>
       </div>
     );

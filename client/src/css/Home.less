@@ -51,6 +51,17 @@ body {
   display: inline-block;
   color: white;
   border-color: white;
+
+  &:hover {
+    color: #444;
+    border-color: #444;
+
+    @time: 200ms;
+
+    -webkit-transition: border-color @time linear, color @time linear;
+    -ms-transition: border-color @time linear, color @time linear;
+    transition: border-color @time linear, color @time linear;
+  }
 }
 
 @media (min-width: 650px) {
@@ -59,4 +70,9 @@ body {
     margin-left: 30px;
     margin-right: 30px;
   }
+}
+
+.negMargin {
+  margin-top: -30px;
+  margin-bottom: 40px;
 }

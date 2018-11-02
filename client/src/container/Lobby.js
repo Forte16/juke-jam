@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../css/Host.css';
+import MainButton from '../presentational/MainButton';
+import ButtonBar from '../presentational/ButtonBar';
 import '../css/tailwind.css';
 import PropTypes from 'prop-types';
 import HostSongResults from '../presentational/HostSongResults';
@@ -96,7 +98,9 @@ class Lobby extends Component {
   }
 
   deleteMe(event, songID) {
-    this.deleteDatabase(songID).then(this.deleteFrontend(event));
+    this.deleteDatabase(songID);
+    // need to figure out how to delete from the frontend too
+    // just refresh??
   }
 
   addMe(event, songID, name, artist) {
@@ -132,8 +136,13 @@ class Lobby extends Component {
           <div>
             {'Users can send you recommendations at this link:'}
           </div>
-          <input type="text" value={`http://localhost:3000/recommend/${this.state.playlistID}`} id="linkInput" readOnly />
-          <input type="button" value="Copy link" onClick={Lobby.getLink} />
+          <ButtonBar
+            textbarID="linkInput"
+            textbarValue={`http://localhost:3000/recommend/${this.state.playlistID}`}
+            clickFunc={Lobby.getLink}
+            readOnly={true}
+            value="Copy"
+          />
         </div>
         <hr className="divider" />
         <div className="topPart">
@@ -148,7 +157,10 @@ class Lobby extends Component {
         />
 
         <div className="socketBtnDiv">
-          <input className="customBtn" type="button" value="Refresh" onClick={this.refresh} />
+          <MainButton
+            clickFunc={this.refresh}
+            value="Refresh"
+          />
         </div>
       </div>
     );

@@ -3,3 +3,48 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.allBtns {
+  cursor: pointer;
+  background-color: white;
+  color: #444;
+
+  @time: 200ms;
+
+  &:hover {
+    background-color: #444;
+    color: white;
+    -webkit-transition: background-color @time linear, color @time linear;
+    -ms-transition: background-color @time linear, color @time linear;
+    transition: background-color @time linear, color @time linear;
+  }
+}
+
+.mainBtn {
+  .allBtns;
+
+  height: 40px;
+  width: 100px;
+}
+
+.mdBtn {
+  .allBtns;
+
+  border: #444 solid 1px;
+  height: 33px;
+  padding-top: 3px;
+  width: 70px;
+}
+
+.miniBtn {
+  .allBtns;
+
+  height: 20px;
+  width: 50px;
+  font-size: 12px;
+}
+
+.textBar {
+  border: #444 solid 1px;
+  height: 33px;
+}

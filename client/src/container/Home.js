@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import co from 'co';
 import PropTypes from 'prop-types';
+import MiniButton from '../presentational/MiniButton';
+import ButtonBar from '../presentational/ButtonBar';
 import Host from './Host'; // eslint-disable-line
 import '../css/Home.css';
 import '../css/tailwind.css';
@@ -49,8 +51,11 @@ class Home extends Component {
       buttonDiv = (
         <div>
           <input type="button" id="hostButton" value="Get Started" onClick={this.goToLobby} />
-          <div>
-            <input type="button" value="Logout" className="customBtn2 logout" onClick={this.logout} />
+          <div className="negMargin">
+            <MiniButton
+              clickFunc={this.logout}
+              value="Logout"
+            />
           </div>
         </div>
       );
@@ -77,8 +82,11 @@ class Home extends Component {
         </div>
         { buttonDiv }
         <div>
-          <input type="text" id="lobbyText" />
-          <input type="button" value="Join" className="customBtn2 logout" onClick={this.joinLobby} />
+          <ButtonBar
+            textbarID="lobbyText"
+            clickFunc={this.joinLobby}
+            value="Join"
+          />
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import GuestSongResults from '../presentational/GuestSongResults';
+import ButtonBar from '../presentational/ButtonBar';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 
@@ -80,8 +81,11 @@ class Guest extends Component {
         <div className="searchWords">
          Search for a track you'd like to recommend below:
         </div>
-        <input type="text" id="text2" />
-        <input type="button" id="btn2" className="customBtn3" value="Submit" onClick={this.getTracks} />
+        <ButtonBar
+          clickFunc={this.getTracks}
+          textbarID="text2"
+          value="Search"
+        />
 
         <GuestSongResults currentSongs={this.state.currentSongs} recommendMe={this.recommendMe} />
 
