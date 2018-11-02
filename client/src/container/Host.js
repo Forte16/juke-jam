@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { Row, Col } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import '../css/tailwind.css';
 import MainButton from '../presentational/MainButton';
 import MiniButton from '../presentational/MiniButton';
 import PropTypes from 'prop-types';
-import Playlists from '../presentational/Playlists';
+import Playlist from '../presentational/Playlist';
 
 class Host extends Component {
   constructor(props) {
@@ -117,8 +118,17 @@ class Host extends Component {
             <div className="settingsWords">
               {'Select your playlist:'}
             </div>
-            <Playlists playlists={this.state.playlists} />
 
+            <div id="playlistsSection">
+              <Row>
+                {this.state.playlists.map((playlist, i) => (
+                  <Playlist
+                    key={i}
+                    playlist={playlist}
+                  />
+                ))}
+              </Row>
+            </div>
             <div className="maxRecSection">
               <span className="settingsWords">
                 {'Max recommendations per person:'}
