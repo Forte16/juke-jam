@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import '../css/tailwind.css';
@@ -91,10 +91,6 @@ class Host extends Component {
   render() {
     if (!this.musicInstance.isAuthorized) {
       // send them back to host
-    }
-
-    if (this.state.submit) {
-      // send to lobby with this.state.playlistID
     }
 
     return (

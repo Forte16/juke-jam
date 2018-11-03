@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 
-import { Row, Col } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const Playlist = ({ playlist }) => (
