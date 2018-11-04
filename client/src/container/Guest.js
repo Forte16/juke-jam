@@ -68,7 +68,7 @@ class Guest extends Component {
 
   recommendMe(songID, name, artist) {
     const playlistID = this.state.playlistID;
-    fetch('http://localhost:5555/recommend', {
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/recommend`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

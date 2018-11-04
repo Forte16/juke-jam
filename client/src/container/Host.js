@@ -13,9 +13,11 @@ class Host extends Component {
     super(props);
     this.state = {
       playlists: [],
+      max: 0,
     };
     this.musicInstance = this.props.musicInstance;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleMax = this.handleMax.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -58,7 +60,7 @@ class Host extends Component {
     if (temp === null) {
       alert('You must select a playlist!');
     } else {
-      fetch('http://localhost:5555/create', {
+      fetch(`${process.env.REACT_APP_API_DOMAIN}/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,6 +68,7 @@ class Host extends Component {
         },
         body: JSON.stringify({
           playlistID: temp.value,
+          max: this.state.max,
         }),
       }).then(() => {
         this.props.history.push({
@@ -73,6 +76,10 @@ class Host extends Component {
         });
       });
     }
+  }
+
+  handleMax(event) {
+    this.setState({max: event.target.value});
   }
 
   formatArtworkURL(url, height, width) {
@@ -134,7 +141,7 @@ class Host extends Component {
                   <tr>
 
                     <td>
-                      <select id="select" className="form-control">
+                      <select id="select" onChange={this.handleMax} className="form-control">
                         <option value={0}>
                           {'0'}
                         </option>

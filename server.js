@@ -21,46 +21,46 @@ if (process.env.NODE_ENV === 'production') {
 
 app.post('/create', (req, res) => {
   const lobbyID = req.body.playlistID;
-  store.newLobby({ lobbyID }).then(() => res.sendStatus(200));
+  const max = req.body.max;
+  store.lobbyExists({ lobbyID }).then((result) => {
+    if (result.length === 0) {
+      store.newLobby({ lobbyID, max }).then(() => res.sendStatus(200));
+    } else {
+      res.sendStatus(200);
+    }
+  });
 });
 
 app.post('/recommend', (req, res) => {
-  const songID = req.body.songID;
   const lobbyID = req.body.playlistID;
-
-  store.getRecommendations({ lobbyID }).then((result) => {
-    const recommendations = result[0].recommendations;
-    if (!recommendations.includes(songID)) {
-      recommendations.push(songID);
-      store.setRecommendations({ lobbyID, recommendations }).then(() => res.sendStatus(200));
-    }
-  });
+  const songID = req.body.songID;
+  const IpAddress = req.ip;
+  store.addRecommendation({ lobbyID, songID, IpAddress }).then(() => res.sendStatus(200));
 });
 
 app.post('/receive', (req, res) => {
   const lobbyID = req.body.playlistID;
   store.getRecommendations({ lobbyID }).then((result) => {
-    res.send({ list: result[0].recommendations });
+    const songs = [];
+    for (let i = 0; i < result.length; i += 1) {
+      songs.push(result[i].song_id);
+    }
+    res.send({ list: songs });
   });
 });
 
 app.post('/delete', (req, res) => {
-  const songID = req.body.songID;
   const lobbyID = req.body.playlistID;
+  const songID = req.body.songID;
+  const status = 'deleted';
+  store.markRecommendation({ lobbyID, songID, status }).then(() => res.sendStatus(200));
+});
 
-  store.getRecommendations({ lobbyID }).then((result) => {
-    let recommendations = result[0].recommendations;
-    const index = recommendations.indexOf(songID);
-    if (index > -1) {
-      if (recommendations.length === 1) {
-        recommendations = [];
-        store.setRecommendations({ lobbyID, recommendations }).then(() => res.sendStatus(200));
-      } else {
-        recommendations.splice(index, 1);
-        store.setRecommendations({ lobbyID, recommendations }).then(() => res.sendStatus(200));
-      }
-    }
-  });
+app.post('/add', (req, res) => {
+  const lobbyID = req.body.playlistID;
+  const songID = req.body.songID;
+  const status = 'added';
+  store.markRecommendation({ lobbyID, songID, status }).then(() => res.sendStatus(200));
 });
 
 app.get('*', (request, response) => {

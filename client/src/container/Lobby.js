@@ -27,7 +27,6 @@ class Lobby extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
-    this.deleteDatabase = this.deleteDatabase.bind(this);
   }
 
   componentDidMount() {
@@ -49,7 +48,7 @@ class Lobby extends Component {
   refresh() {
     const playlistID = this.state.playlistID;
 
-    fetch('http://localhost:5555/receive', {
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/receive`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,31 +59,30 @@ class Lobby extends Component {
       }),
     }).then(response => response.json())
       .then((resp) => {
-        if (resp.list) {
-          const songs = [];
-          for (let i = 0; i < resp.list.length; i += 1) {
-            const songID = resp.list[i];
-            this.musicInstance.api.song(songID)
-              .then((response) => {
-                const name = response.attributes.name;
-                const artist = response.attributes.artistName;
-                const pushMe = {
-                  name: name,
-                  artist: artist,
-                  songID: songID,
-                };
-                songs.push(pushMe);
-                this.setState({ recommendedSongs: songs });
-              // aware this couldn't be dumber, will fix on Apple Music conversion
-              });
+        this.musicInstance.api.songs(resp.list).then((songs) => {
+          const recommendedSongs = [];
+          for (let i = 0; i < songs.length; i += 1) {
+            const name = songs[i].attributes.name;
+            const artist = songs[i].attributes.artistName;
+            const songID = songs[i].id;
+            const pushMe = {
+              name: name,
+              artist: artist,
+              songID: songID,
+            };
+            recommendedSongs.push(pushMe);
           }
-        }
+          this.setState({ recommendedSongs: recommendedSongs });
+        });
       });
   }
 
-  deleteDatabase(songID) {
+  deleteMe(event, songID) {
+    const that = this;
     const playlistID = this.state.playlistID;
-    return fetch('http://localhost:5555/delete', {
+
+    // mark as deleted in database and update UI
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/delete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,18 +92,27 @@ class Lobby extends Component {
         songID: songID,
         playlistID: playlistID,
       }),
-    });
-  }
-
-  deleteMe(event, songID) {
-    this.deleteDatabase(songID);
-    // need to figure out how to delete from the frontend too
-    // just refresh??
+    }).then(() => that.refresh());
   }
 
   addMe(event, songID, name, artist) {
+    const that = this;
     const playlistID = this.state.playlistID;
 
+    // mark as added in database and update UI
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        songID: songID,
+        playlistID: playlistID,
+      }),
+    }).then(() => that.refresh());
+
+    // add the song to the user's playlist
     fetch(`https://api.music.apple.com/v1/me/library/playlists/${playlistID}/tracks`, {
       method: 'POST',
       headers: {
@@ -124,9 +131,6 @@ class Lobby extends Component {
       .then(resp => console.log(resp));
 
     alert(`${name} by ${artist} has been added to your playlist!`);
-
-    // delete the song after adding it
-    this.deleteMe(event);
   }
 
   render() {
@@ -149,9 +153,9 @@ class Lobby extends Component {
           {'Recommended songs from your friends:'}
         </div>
         <div className="recommendedSongs">
-          {this.state.recommendedSongs.map((song, i) => (
+          {this.state.recommendedSongs.map(song => (
             <RecommendedSong
-              key={i}
+              key={song.songID}
               addMe={this.addMe}
               deleteMe={this.deleteMe}
               song={song}
