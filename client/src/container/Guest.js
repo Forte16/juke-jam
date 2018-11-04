@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import GuestSongResult from '../presentational/GuestSongResult';
 import ButtonBar from '../presentational/ButtonBar';
@@ -18,6 +19,7 @@ class Guest extends Component {
     this.getTracks = this.getTracks.bind(this);
     this.recommendMe = this.recommendMe.bind(this);
     this.handleEnterPress = this.handleEnterPress.bind(this);
+    this.checkLobby = this.checkLobby.bind(this);
   }
 
   componentDidMount() {
@@ -27,7 +29,26 @@ class Guest extends Component {
     const url = window.location.href;
     const index = window.location.href.indexOf('mend/');
     const idURL = url.substring(index + 5);
-    this.setState({ playlistID: idURL });
+    this.setState({ playlistID: idURL }, function () {
+      this.checkLobby();
+    });
+  }
+
+  checkLobby() {
+    const that = this;
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/exists?lobbyID=${this.state.playlistID}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+        if (response.status === 404) {
+          that.props.history.push({
+            pathname: '/',
+          });
+        }
+    });
   }
 
   getTracks() {
@@ -142,4 +163,4 @@ Guest.propTypes = {
 };
 
 
-export default Guest;
+export default withRouter(Guest);
