@@ -69,6 +69,17 @@ app.post('/add', (req, res) => {
   store.markRecommendation({ lobbyID, songID, status }).then(() => res.sendStatus(200));
 });
 
+app.get('/exists', (req, res) => {
+  const lobbyID = req.query.lobbyID;
+  store.lobbyExists({ lobbyID }).then((result) => {
+    if (result.length === 0) {
+      res.sendStatus(404);
+    } else {
+      res.sendStatus(200);
+    }
+  });
+});
+
 app.get('*', (request, response) => {
   response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });

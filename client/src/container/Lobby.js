@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import MainButton from '../presentational/MainButton';
 import ButtonBar from '../presentational/ButtonBar';
@@ -27,6 +28,7 @@ class Lobby extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
+    this.checkLobby = this.checkLobby.bind(this);
   }
 
   componentDidMount() {
@@ -36,6 +38,7 @@ class Lobby extends Component {
     const idURL = url.substring(index + 5);
     this.setState({ playlistID: idURL }, function () {
       this.refresh();
+      this.checkLobby();
     });
   }
 
@@ -43,6 +46,23 @@ class Lobby extends Component {
     const copyText = document.getElementById('linkInput');
     copyText.select();
     document.execCommand('copy');
+  }
+
+  checkLobby() {
+    const that = this;
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/exists?lobbyID=${this.state.playlistID}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+        if (response.status === 404) {
+          that.props.history.push({
+            pathname: '/',
+          });
+        }
+    });
   }
 
   refresh() {
@@ -177,4 +197,4 @@ Lobby.propTypes = {
   musicInstance: PropTypes.object.isRequired,
 };
 
-export default Lobby;
+export default withRouter(Lobby);
