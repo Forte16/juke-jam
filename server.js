@@ -35,7 +35,13 @@ app.post('/recommend', (req, res) => {
   const lobbyID = req.body.playlistID;
   const songID = req.body.songID;
   const IpAddress = req.ip;
-  store.addRecommendation({ lobbyID, songID, IpAddress }).then(() => res.sendStatus(200));
+  store.recommendationExists({ lobbyID, songID }).then((result) => {
+    if (result.length === 0) {
+      store.addRecommendation({ lobbyID, songID, IpAddress }).then(() => res.sendStatus(200));
+    } else {
+      res.sendStatus(200);
+    }
+  });
 });
 
 app.post('/receive', (req, res) => {

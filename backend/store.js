@@ -37,6 +37,19 @@ module.exports = {
       });
   },
 
+  recommendationExists({
+    lobbyID,
+    songID,
+  }) {
+    return knex.select()
+      .from('recommendations')
+      .where({
+        'lobby_id': lobbyID,
+        'song_id': songID,
+      })
+      .then(res => res);
+  },
+
   getRecommendations({
     lobbyID,
   }) {
