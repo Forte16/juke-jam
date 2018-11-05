@@ -45,7 +45,7 @@ class Host extends Component {
             .then((playlist) => {
               const obj = {
                 name: playlist.attributes.name,
-                id: playlist.id,
+                id: playlist.id.substring(2),
                 key: i,
                 artwork: window.MusicKit.formatArtworkURL(playlist.attributes.artwork),
                 tracks: playlist.relationships.tracks.data.length,
