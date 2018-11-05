@@ -182,7 +182,7 @@ class Lobby extends Component {
             />
           ))}
         </div>
-        <div className="socketBtnDiv">
+        <div className="text-center mt-4">
           <MainButton
             clickFunc={this.refresh}
             value="Refresh"

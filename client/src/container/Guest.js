@@ -129,7 +129,7 @@ class Guest extends Component {
       <div className="main">
         <div className="code">
            Welcome to lobby:
-          <span className="code2">
+          <span className="ml-2 code2">
             {this.state.playlistID}
           </span>
         </div>
