@@ -38,9 +38,6 @@ const About = () => (
       </div>
       <ol id="guestList">
         <li>
-          {'Login into Spotify to connect your account with Juke Jam. '}
-        </li>
-        <li>
           {'Enter your host\'s unique code or receive a direct link from your host to their lobby.'}
         </li>
         <li>
