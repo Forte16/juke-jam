@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
+import PropTypes from 'prop-types';
 import MainButton from '../presentational/MainButton';
 import ButtonBar from '../presentational/ButtonBar';
 import RecommendedSong from '../presentational/RecommendedSong';
 import '../css/tailwind.css';
-import PropTypes from 'prop-types';
 
 class Lobby extends Component {
   static deleteFrontend(event) {
@@ -57,11 +57,11 @@ class Lobby extends Component {
         'Content-Type': 'application/json',
       },
     }).then((response) => {
-        if (response.status === 404) {
-          that.props.history.push({
-            pathname: '/',
-          });
-        }
+      if (response.status === 404) {
+        that.props.history.push({
+          pathname: '/',
+        });
+      }
     });
   }
 
@@ -164,7 +164,7 @@ class Lobby extends Component {
             textbarID="linkInput"
             textbarValue={`http://localhost:3000/recommend/${this.state.playlistID}`}
             clickFunc={Lobby.getLink}
-            readOnly={true}
+            readOnly
             value="Copy"
           />
         </div>

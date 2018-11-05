@@ -34,36 +34,19 @@ class Guest extends Component {
     });
   }
 
-  checkLobby() {
-    const that = this;
-    fetch(`${process.env.REACT_APP_API_DOMAIN}/exists?lobbyID=${this.state.playlistID}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-        if (response.status === 404) {
-          that.props.history.push({
-            pathname: '/',
-          });
-        }
-    });
-  }
-
   getTracks() {
     const fillin = document.getElementById('text2').value;
     if (!fillin) return;
 
-    this.setState({noResults: false});
-    this.setState({currentSongs: []});
-    this.setState({spinner: true});
+    this.setState({ noResults: false });
+    this.setState({ currentSongs: [] });
+    this.setState({ spinner: true });
 
     this.musicInstance.api.search(fillin, { limit: 20, types: 'songs' })
       .then((response) => {
-        this.setState({spinner: false});
+        this.setState({ spinner: false });
         if (response.songs === undefined) {
-          this.setState({noResults: true});
+          this.setState({ noResults: true });
           return;
         }
         const objects = [];
@@ -79,6 +62,23 @@ class Guest extends Component {
         }
         this.setState({ currentSongs: objects });
       });
+  }
+
+  checkLobby() {
+    const that = this;
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/exists?lobbyID=${this.state.playlistID}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      if (response.status === 404) {
+        that.props.history.push({
+          pathname: '/',
+        });
+      }
+    });
   }
 
   handleEnterPress(event) {
@@ -111,19 +111,19 @@ class Guest extends Component {
         <div>
           {'Sorry no results were found.'}
         </div>
-      )
+      );
     } else {
-      noResults = (<div/ >)
+      noResults = (<div />);
     }
 
     if (this.state.spinner) {
       spinner = (
         <div className="text-center">
-          <div className="spinner"/>
+          <div className="spinner" />
         </div>
-      )
+      );
     } else {
-      spinner = (<div/>)
+      spinner = (<div />);
     }
     return (
       <div className="main">
@@ -142,12 +142,12 @@ class Guest extends Component {
           textbarID="text2"
           value="Search"
         />
-      {noResults}
-      {spinner}
+        {noResults}
+        {spinner}
         <div className="songsGuest">
-          {this.state.currentSongs.map((song, i) => (
+          {this.state.currentSongs.map(song => (
             <GuestSongResult
-              key={i}
+              key={song.id}
               song={song}
               recommendMe={this.recommendMe}
             />

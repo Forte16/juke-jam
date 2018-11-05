@@ -6,9 +6,9 @@ import '../css/tailwind.css';
 import { Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
-const Playlist = ({ playlist }) => (
-  <Col className="playlist" key={playlist.id}>
-    <input type="radio" name="playlists" className="buttons" value={playlist.id} />
+const Playlist = ({ playlist, clickFunc }) => (
+  <Col className="playlist" key={playlist.id} onClick={(e) => clickFunc(e, playlist.id)}>
+    <input id={playlist.id} type="radio" name="playlists" className="buttons hidden" value={playlist.id} />
     <span className="playlistLeft">
       <img className="cover" src={playlist.artwork} alt="" />
     </span>
@@ -26,6 +26,7 @@ const Playlist = ({ playlist }) => (
 
 Playlist.propTypes = {
   playlist: PropTypes.object.isRequired,
+  clickFunc: PropTypes.func.isRequired,
 };
 
 export default Playlist;

@@ -3,9 +3,9 @@ import { Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import '../css/tailwind.css';
+import PropTypes from 'prop-types';
 import MainButton from '../presentational/MainButton';
 import MiniButton from '../presentational/MiniButton';
-import PropTypes from 'prop-types';
 import Playlist from '../presentational/Playlist';
 
 class Host extends Component {
@@ -14,11 +14,13 @@ class Host extends Component {
     this.state = {
       playlists: [],
       max: 0,
+      idSelected: 0,
     };
     this.musicInstance = this.props.musicInstance;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleMax = this.handleMax.bind(this);
     this.logout = this.logout.bind(this);
+    this.clicked = this.clicked.bind(this);
   }
 
   componentDidMount() {
@@ -79,7 +81,7 @@ class Host extends Component {
   }
 
   handleMax(event) {
-    this.setState({max: event.target.value});
+    this.setState({ max: event.target.value });
   }
 
   formatArtworkURL(url, height, width) {
@@ -95,9 +97,28 @@ class Host extends Component {
     });
   }
 
+  clicked(id) {
+    // remove active from old
+    const oldID = this.state.idSelected;
+    if (oldID !== 0) document.getElementById(oldID).parentElement.classList.remove('playlistActive');
+
+    document.getElementById(id).parentElement.classList.add('playlistActive');
+    document.getElementById(id).checked = true;
+    this.setState({ idSelected: id });
+  }
+
   render() {
     if (!this.musicInstance.isAuthorized) {
       // send them back to host
+    }
+
+    const playlists = [];
+    for (let i = 0; i < this.state.playlists.length; i += 1) {
+      playlists.push(<Playlist
+        key={this.state.playlists[i].id}
+        playlist={this.state.playlists[i]}
+        clickFunc={() => this.clicked(this.state.playlists[i].id)}
+      />);
     }
 
     return (
@@ -108,7 +129,7 @@ class Host extends Component {
               {'Select the settings for your Juke Jam party!'}
             </div>
             <div>
-              <span className="mr-1">{'Not your playlists?'}</span>
+              <span className="mr-1">Not your playlists?</span>
               <MiniButton
                 clickFunc={this.logout}
                 value="Logout"
@@ -124,12 +145,7 @@ class Host extends Component {
 
             <div id="playlistsSection">
               <Row>
-                {this.state.playlists.map((playlist, i) => (
-                  <Playlist
-                    key={i}
-                    playlist={playlist}
-                  />
-                ))}
+                {playlists}
               </Row>
             </div>
             <div className="maxRecSection">
