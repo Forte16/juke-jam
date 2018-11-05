@@ -46,6 +46,12 @@ button {
   border: solid 2px white;
   background-color: #444;
   cursor: pointer;
+
+  @time: 200ms;
+
+  -webkit-transition: border-color @time linear, color @time linear;
+  -ms-transition: border-color @time linear, color @time linear;
+  transition: border-color @time linear, color @time linear;
 }
 
 .playlistActive {

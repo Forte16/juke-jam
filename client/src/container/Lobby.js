@@ -132,8 +132,17 @@ class Lobby extends Component {
       }),
     }).then(() => that.refresh());
 
+    const data = {
+      'data': [
+        {
+          'id': songID,
+          'type': 'songs',
+        },
+      ],
+    };
+
     // add the song to the user's playlist
-    fetch(`https://api.music.apple.com/v1/me/library/playlists/${playlistID}/tracks`, {
+    fetch(`https://api.music.apple.com/v1/me/library/playlists/p.${playlistID}/tracks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -141,14 +150,8 @@ class Lobby extends Component {
         'Authorization': `Bearer ${this.musicInstance.developerToken}`,
         'Music-User-Token': this.musicInstance.musicUserToken,
       },
-      body: {
-        'data': [{
-          'id': songID,
-          'type': 'library-songs',
-        }],
-      },
-    }).then(response => response.json())
-      .then(resp => console.log(resp));
+      body: JSON.stringify(data),
+    });
 
     alert(`${name} by ${artist} has been added to your playlist!`);
   }
