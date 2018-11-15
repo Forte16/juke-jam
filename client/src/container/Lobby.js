@@ -66,6 +66,7 @@ class Lobby extends Component {
   }
 
   refresh() {
+    console.log(process.env.REACT_APP_API_DOMAIN);
     const playlistID = this.state.playlistID;
 
     fetch(`${process.env.REACT_APP_API_DOMAIN}/receive`, {
