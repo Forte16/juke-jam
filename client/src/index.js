@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Guest from './container/Guest';
 import About from './presentational/About';
 import Mobile from './presentational/Mobile';
 import Home from './container/Home';
 import Host from './container/Host';
 import Lobby from './container/Lobby';
+import NotFound from './presentational/NotFound';
 import registerServiceWorker from './registerServiceWorker';
 import AppleMusicAuth from './AppleMusicAuth';
 
@@ -25,13 +26,14 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
   // serve desktop view
   ReactDOM.render(
     <Router>
-      <div>
+      <Switch>
         <Route exact path="/" render={() => <Home musicInstance={musicInstance} />} />
         <Route exact path="/host" render={() => <Host musicInstance={musicInstance} />} />
         <Route path="/host/lobby" render={() => <Lobby musicInstance={musicInstance} />} />
         <Route path="/recommend" render={() => <Guest musicInstance={musicInstance} />} />
         <Route path="/about" component={About} />
-      </div>
+        <Route component={NotFound} />
+      </Switch>
     </Router>,
     document.getElementById('root'),
   );
