@@ -29,6 +29,9 @@ class Lobby extends Component {
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
     this.checkLobby = this.checkLobby.bind(this);
+    this.isAuthorized = this.isAuthorized.bind(this);
+    this.ownsPlaylist = this.ownsPlaylist.bind(this);
+    this.sendHome = this.sendHome.bind(this);
   }
 
   componentDidMount() {
@@ -37,8 +40,10 @@ class Lobby extends Component {
     const index = window.location.href.indexOf('obby/');
     const idURL = url.substring(index + 5);
     this.setState({ playlistID: idURL }, function () {
-      this.refresh();
-      this.checkLobby();
+      Promise.all([this.checkLobby(), this.isAuthorized(), this.ownsPlaylist()])
+      .then(() => {
+        this.refresh();
+      });
     });
   }
 
@@ -58,10 +63,27 @@ class Lobby extends Component {
       },
     }).then((response) => {
       if (response.status === 404) {
-        that.props.history.push({
-          pathname: '/',
-        });
+        that.sendHome();
       }
+    });
+  }
+
+  isAuthorized() {
+    if (!this.musicInstance.isAuthorized) {
+      this.sendHome();
+    }
+  }
+
+  ownsPlaylist() {
+    this.musicInstance.api.library.playlist(`p.${this.state.playlistID}`)
+    .catch(() => {
+      this.sendHome();
+    });
+  }
+
+  sendHome() {
+    this.props.history.push({
+      pathname: '/',
     });
   }
 
