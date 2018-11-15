@@ -1,6 +1,7 @@
 {
   "name": "juke-jam",
   "version": "1.0.0",
+  "main": "server.js",
   "dependencies": {
     "express": "^4.16.4",
     "jsonwebtoken": "^8.3.0",
@@ -21,5 +22,8 @@
     "start": "concurrently --kill-others \"npm run server\" \"cd client && npm run start\"",
     "server": "node server.js",
     "lint": "eslint ."
+  },
+  "engines": {
+    "node": "10.0.0"
   }
 }
