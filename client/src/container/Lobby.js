@@ -66,6 +66,7 @@ class Lobby extends Component {
   }
 
   refresh() {
+    console.log(process.env.REACT_APP_API_DOMAIN);
     const playlistID = this.state.playlistID;
 
     fetch(`${process.env.REACT_APP_API_DOMAIN}/receive`, {
@@ -165,7 +166,7 @@ class Lobby extends Component {
           </div>
           <ButtonBar
             textbarID="linkInput"
-            textbarValue={`http://localhost:3000/recommend/${this.state.playlistID}`}
+            textbarValue={`${process.env.REACT_APP_API_DOMAIN}/recommend/${this.state.playlistID}`}
             clickFunc={Lobby.getLink}
             readOnly
             value="Copy"
