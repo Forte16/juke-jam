@@ -166,7 +166,7 @@ class Lobby extends Component {
           </div>
           <ButtonBar
             textbarID="linkInput"
-            textbarValue={`${process.env.REACT_APP_API_DOMAIN}/recommend/${this.state.playlistID}`}
+            textbarValue={`${process.env.REACT_APP_URL}/recommend/${this.state.playlistID}`}
             clickFunc={Lobby.getLink}
             readOnly
             value="Copy"
