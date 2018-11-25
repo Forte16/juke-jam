@@ -54,7 +54,7 @@ const About = () => (
     </div>
     <div id="oooTellEm">
       {'Check out some other of my projects'}
-      <a href="https:www.alexandroforte.com" className="goToWebsite">
+      <a href="https://www.alexandroforte.com" className="goToWebsite">
         {' HERE'}
       </a>
       .
