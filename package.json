@@ -21,7 +21,8 @@
   "scripts": {
     "start": "concurrently --kill-others \"npm run server\" \"cd client && npm run start\"",
     "server": "node server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "heroku-postbuild": "cd client && npm i && npm install --only=dev && npm run build"
   },
   "engines": {
     "node": "10.0.0"
