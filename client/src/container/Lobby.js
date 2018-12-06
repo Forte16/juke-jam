@@ -41,9 +41,9 @@ class Lobby extends Component {
     const idURL = url.substring(index + 5);
     this.setState({ playlistID: idURL }, function () {
       Promise.all([this.checkLobby(), this.isAuthorized(), this.ownsPlaylist()])
-      .then(() => {
-        this.refresh();
-      });
+        .then(() => {
+          this.refresh();
+        });
     });
   }
 
@@ -76,9 +76,9 @@ class Lobby extends Component {
 
   ownsPlaylist() {
     this.musicInstance.api.library.playlist(`p.${this.state.playlistID}`)
-    .catch(() => {
-      this.sendHome();
-    });
+      .catch(() => {
+        this.sendHome();
+      });
   }
 
   sendHome() {
@@ -219,6 +219,7 @@ class Lobby extends Component {
 }
 
 Lobby.propTypes = {
+  history: PropTypes.object.isRequired,
   musicInstance: PropTypes.object.isRequired,
 };
 
