@@ -81,13 +81,6 @@ class Home extends Component {
           </a>
         </div>
         { buttonDiv }
-        <div>
-          <ButtonBar
-            textbarID="lobbyText"
-            clickFunc={this.joinLobby}
-            value="Join"
-          />
-        </div>
       </div>
     );
   }
