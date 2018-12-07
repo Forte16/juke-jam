@@ -44,12 +44,14 @@ class Host extends Component {
         for (let i = 0; i < response.length; i += 1) {
           this.musicInstance.api.library.playlist(ids[i])
             .then((playlist) => {
+              let tracks = playlist.relationships.tracks.data.length;
+              tracks = tracks === 100 ? '100+' : tracks;
               const obj = {
                 name: playlist.attributes.name,
                 id: playlist.id.substring(2),
                 key: i,
                 artwork: window.MusicKit.formatArtworkURL(playlist.attributes.artwork),
-                tracks: playlist.relationships.tracks.data.length,
+                tracks: tracks,
               };
               this.setState({ playlists: [...this.state.playlists, obj] }); // eslint-disable-line
             });
