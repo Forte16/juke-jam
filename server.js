@@ -35,12 +35,24 @@ app.post('/create', (req, res) => {
 app.post('/recommend', (req, res) => {
   const lobbyID = req.body.playlistID;
   const songID = req.body.songID;
-  const IpAddress = req.ip;
-  store.recommendationExists({ lobbyID, songID }).then((result) => {
-    if (result.length === 0) {
-      store.addRecommendation({ lobbyID, songID, IpAddress }).then(() => res.sendStatus(200));
+  const ipAddress = req.ip;
+  Promise.all([
+    store.recommendationExists({ lobbyID, songID }),
+    store.numberRecommended({ lobbyID, ipAddress }),
+    store.lobbyExists({ lobbyID }),
+  ]).then(function (values) {
+    const recExists = (values[0].length !== 0);
+    const numRecs = values[1][0].count;
+    const maxRecs = values[2][0].max_recommendations;
+    console.log(recExists);
+    console.log(numRecs);
+    console.log(maxRecs);
+    if (numRecs >= maxRecs) {
+      res.sendStatus(429);
+    } else if (recExists) {
+      res.sendStatus(409);
     } else {
-      res.sendStatus(200);
+      store.addRecommendation({ lobbyID, songID, ipAddress }).then(() => res.sendStatus(200));
     }
   });
 });

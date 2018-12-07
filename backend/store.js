@@ -28,14 +28,14 @@ module.exports = {
   addRecommendation({
     lobbyID,
     songID,
-    IpAddress,
+    ipAddress,
   }) {
     return knex.select()
       .from('recommendations')
       .insert({
         lobby_id: lobbyID,
         song_id: songID,
-        ip_address: IpAddress,
+        ip_address: ipAddress,
       });
   },
 
@@ -48,6 +48,19 @@ module.exports = {
       .where({
         'lobby_id': lobbyID,
         'song_id': songID,
+      })
+      .then(res => res);
+  },
+
+  numberRecommended({
+    lobbyID,
+    ipAddress,
+  }) {
+    return knex.count()
+      .from('recommendations')
+      .where({
+        'lobby_id': lobbyID,
+        'ip_address': ipAddress,
       })
       .then(res => res);
   },

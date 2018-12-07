@@ -103,7 +103,15 @@ class Guest extends Component {
         songID: songID,
         playlistID: playlistID,
       }),
-    }).then(alert(`Your recommendation of ${name} by ${artist} has been sent!`));
+    }).then((resp) => {
+      if (resp.status === 200) {
+        alert(`Your recommendation of ${name} by ${artist} has been sent!`);
+      } else if (resp.status === 409) {
+        alert(`Your recommendation of ${name} by ${artist} has already been recommended.`);
+      } else if (resp.status === 429) {
+        alert('Sorry, you have reached the maximum number of recommendations for this lobby.');
+      }
+    });
   }
 
   render() {
