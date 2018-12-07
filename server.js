@@ -44,9 +44,6 @@ app.post('/recommend', (req, res) => {
     const recExists = (values[0].length !== 0);
     const numRecs = values[1][0].count;
     const maxRecs = values[2][0].max_recommendations;
-    console.log(recExists);
-    console.log(numRecs);
-    console.log(maxRecs);
     if (numRecs >= maxRecs) {
       res.sendStatus(429);
     } else if (recExists) {
