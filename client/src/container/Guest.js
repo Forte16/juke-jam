@@ -14,6 +14,7 @@ class Guest extends Component {
       currentSongs: [],
       noResults: false,
       spinner: false,
+      name: '',
     };
     this.musicInstance = this.props.musicInstance;
     this.getTracks = this.getTracks.bind(this);
@@ -72,13 +73,16 @@ class Guest extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      if (response.status === 404) {
-        that.props.history.push({
-          pathname: '/',
-        });
-      }
-    });
+    }).then(response => response.json())
+      .then((resp) => {
+        if (resp.lobby === null) {
+          that.props.history.push({
+            pathname: '/',
+          });
+        } else {
+          that.setState({ name: resp.lobby.name });
+        }
+      });
   }
 
   handleEnterPress(event) {
@@ -125,13 +129,13 @@ class Guest extends Component {
     } else {
       spinner = (<div />);
     }
+
     return (
       <div className="main">
-        <div className="code">
-           Welcome to lobby:
-          <span className="ml-1 code2">
-            {this.state.playlistID}
-          </span>
+        <div>
+          <div className="code2">
+            { this.state.name }
+          </div>
         </div>
         <hr className="divider" />
         <div className="searchWords">

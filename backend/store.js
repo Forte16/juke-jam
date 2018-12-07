@@ -4,6 +4,7 @@ module.exports = {
   newLobby({
     lobbyID,
     max,
+    name,
   }) {
     return knex.select()
       .from('lobbies')
@@ -11,6 +12,7 @@ module.exports = {
       .insert({
         lobby_id: lobbyID,
         max_recommendations: max,
+        name: name,
       });
   },
 

@@ -22,9 +22,10 @@ if (process.env.NODE_ENV === 'production') {
 app.post('/create', (req, res) => {
   const lobbyID = req.body.playlistID;
   const max = req.body.max;
+  const name = req.body.name;
   store.lobbyExists({ lobbyID }).then((result) => {
     if (result.length === 0) {
-      store.newLobby({ lobbyID, max }).then(() => res.sendStatus(200));
+      store.newLobby({ lobbyID, max, name }).then(() => res.sendStatus(200));
     } else {
       res.sendStatus(200);
     }
@@ -75,7 +76,7 @@ app.get('/exists', (req, res) => {
     if (result.length === 0) {
       res.sendStatus(404);
     } else {
-      res.sendStatus(200);
+      res.send({ lobby: result[0] });
     }
   });
 });

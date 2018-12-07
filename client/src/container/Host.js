@@ -15,6 +15,7 @@ class Host extends Component {
       playlists: [],
       max: 0,
       idSelected: 0,
+      name: '',
     };
     this.musicInstance = this.props.musicInstance;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -61,6 +62,8 @@ class Host extends Component {
     const temp = document.querySelector('input[name="playlists"]:checked');
     if (temp === null) {
       alert('You must select a playlist!');
+    } else if (this.state.name === '') {
+      alert('You must enter a name for your lobby!');
     } else {
       fetch(`${process.env.REACT_APP_API_DOMAIN}/create`, {
         method: 'POST',
@@ -71,6 +74,7 @@ class Host extends Component {
         body: JSON.stringify({
           playlistID: temp.value,
           max: this.state.max,
+          name: this.state.name,
         }),
       }).then(() => {
         this.props.history.push({
@@ -82,6 +86,10 @@ class Host extends Component {
 
   handleMax(event) {
     this.setState({ max: event.target.value });
+  }
+
+  handleNameChange(event) {
+    this.setState({ name: event.target.value });
   }
 
   formatArtworkURL(url, height, width) {
@@ -206,6 +214,12 @@ class Host extends Component {
                   </tr>
                 </tbody>
               </table>
+              <span className="settingsWords">
+                {'Name of lobby:'}
+              </span>
+              <div>
+                <input type="text" className="ml-4 pl-2 textBar" id="nameTextBar" onChange={(event) => { this.handleNameChange(event); }} />
+              </div>
             </div>
           </div>
         </form>

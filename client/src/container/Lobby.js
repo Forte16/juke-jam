@@ -183,7 +183,7 @@ class Lobby extends Component {
       <div>
         <div className="code">
           <div>
-            {'Users can send you recommendations at this link:'}
+            {'Friends can send you recommendations at this link:'}
           </div>
           <CopyBar
             textbarID="linkInput"
