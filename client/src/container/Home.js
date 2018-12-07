@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import co from 'co';
 import PropTypes from 'prop-types';
 import MiniButton from '../presentational/MiniButton';
-import ButtonBar from '../presentational/ButtonBar';
 import Host from './Host'; // eslint-disable-line
 import '../css/Home.css';
 import '../css/tailwind.css';
