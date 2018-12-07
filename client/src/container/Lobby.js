@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import PropTypes from 'prop-types';
 import MainButton from '../presentational/MainButton';
-import ButtonBar from '../presentational/ButtonBar';
+import CopyBar from '../presentational/CopyBar';
 import RecommendedSong from '../presentational/RecommendedSong';
 import '../css/tailwind.css';
 
@@ -185,11 +185,10 @@ class Lobby extends Component {
           <div>
             {'Users can send you recommendations at this link:'}
           </div>
-          <ButtonBar
+          <CopyBar
             textbarID="linkInput"
             textbarValue={`${process.env.REACT_APP_URL}/recommend/${this.state.playlistID}`}
             clickFunc={Lobby.getLink}
-            readOnly
             value="Copy"
           />
         </div>

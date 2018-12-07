@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import GuestSongResult from '../presentational/GuestSongResult';
-import ButtonBar from '../presentational/ButtonBar';
+import SearchBar from '../presentational/SearchBar';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 
@@ -137,7 +137,7 @@ class Guest extends Component {
         <div className="searchWords">
          Search for a track you'd like to recommend below:
         </div>
-        <ButtonBar
+        <SearchBar
           clickFunc={this.getTracks}
           textbarID="text2"
           value="Search"

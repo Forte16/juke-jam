@@ -3,26 +3,18 @@ import PropTypes from 'prop-types';
 import '../css/tailwind.css';
 import '../css/index.css';
 
-const ButtonBar = props => (
+const CopyBar = props => (
   <div>
-    <input type="text" value={props.textbarValue} className="pl-2 textBar" id={props.textbarID} readOnly={props.readOnly} />
+    <input type="text" value={props.textbarValue} className="pl-2 textBar" id={props.textbarID} readOnly />
     <input className="mdBtn" type="button" value={props.value} onClick={props.clickFunc} />
   </div>
 );
 
-
-ButtonBar.propTypes = {
+CopyBar.propTypes = {
   textbarID: PropTypes.string.isRequired,
   clickFunc: PropTypes.func.isRequired,
-  textbarValue: PropTypes.string,
-  readOnly: PropTypes.bool,
+  textbarValue: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
 };
 
-ButtonBar.defaultProps = {
-  textbarValue: undefined,
-  readOnly: false,
-};
-
-
-export default ButtonBar;
+export default CopyBar;
