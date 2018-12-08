@@ -15,12 +15,13 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "nodemon": "^1.18.7",
     "stylelint": "^9.7.1",
     "stylelint-config-standard": "^18.2.0"
   },
   "scripts": {
     "start": "concurrently --kill-others \"npm run server\" \"cd client && npm run start\"",
-    "server": "node server.js",
+    "server": "nodemon server.js",
     "lint": "eslint .",
     "heroku-postbuild": "cd client && npm i && npm install --only=dev && npm run build"
   },
