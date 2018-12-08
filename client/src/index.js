@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Guest from './container/Guest';
+import GuestVerify from './container/GuestVerify';
 import About from './presentational/About';
 import Mobile from './presentational/Mobile';
 import Home from './container/Home';
-import Host from './container/Host';
-import Lobby from './container/Lobby';
+import HostVerify from './container/HostVerify';
+import LobbyVerify from './container/LobbyVerify';
 import NotFound from './presentational/NotFound';
 import registerServiceWorker from './registerServiceWorker';
 import AppleMusicAuth from './AppleMusicAuth';
@@ -28,9 +28,9 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     <Router>
       <Switch>
         <Route exact path="/" render={() => <Home musicInstance={musicInstance} />} />
-        <Route exact path="/host" render={() => <Host musicInstance={musicInstance} />} />
-        <Route path="/host/lobby" render={() => <Lobby musicInstance={musicInstance} />} />
-        <Route path="/recommend" render={() => <Guest musicInstance={musicInstance} />} />
+        <Route exact path="/host" render={() => <HostVerify musicInstance={musicInstance} />} />
+        <Route path="/host/lobby" render={() => <LobbyVerify musicInstance={musicInstance} />} />
+        <Route path="/recommend" render={() => <GuestVerify musicInstance={musicInstance} />} />
         <Route path="/about" component={About} />
         <Route component={NotFound} />
       </Switch>

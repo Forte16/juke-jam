@@ -10,29 +10,18 @@ class Guest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playlistID: '',
       currentSongs: [],
       noResults: false,
       spinner: false,
-      name: '',
     };
     this.musicInstance = this.props.musicInstance;
     this.getTracks = this.getTracks.bind(this);
     this.recommendMe = this.recommendMe.bind(this);
     this.handleEnterPress = this.handleEnterPress.bind(this);
-    this.checkLobby = this.checkLobby.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener('keypress', this.handleEnterPress);
-
-    // Code for getting playlistID from URL
-    const url = window.location.href;
-    const index = window.location.href.indexOf('mend/');
-    const idURL = url.substring(index + 5);
-    this.setState({ playlistID: idURL }, function () {
-      this.checkLobby();
-    });
   }
 
   getTracks() {
@@ -65,26 +54,6 @@ class Guest extends Component {
       });
   }
 
-  checkLobby() {
-    const that = this;
-    fetch(`${process.env.REACT_APP_API_DOMAIN}/exists?lobbyID=${this.state.playlistID}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then(response => response.json())
-      .then((resp) => {
-        if (resp.lobby === null) {
-          that.props.history.push({
-            pathname: '/',
-          });
-        } else {
-          that.setState({ name: resp.lobby.name });
-        }
-      });
-  }
-
   handleEnterPress(event) {
     if (event.key === 'Enter') {
       this.getTracks();
@@ -92,7 +61,7 @@ class Guest extends Component {
   }
 
   recommendMe(songID, name, artist) {
-    const playlistID = this.state.playlistID;
+    const playlistID = this.props.playlistID;
     fetch(`${process.env.REACT_APP_API_DOMAIN}/recommend`, {
       method: 'POST',
       headers: {
@@ -142,7 +111,7 @@ class Guest extends Component {
       <div className="main">
         <div>
           <div className="code2">
-            { this.state.name }
+            { this.props.name }
           </div>
         </div>
         <hr className="divider" />
@@ -172,6 +141,8 @@ class Guest extends Component {
 
 Guest.propTypes = {
   musicInstance: PropTypes.object.isRequired,
+  playlistID: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 

@@ -8,16 +8,6 @@ import RecommendedSong from '../presentational/RecommendedSong';
 import '../css/tailwind.css';
 
 class Lobby extends Component {
-  static deleteFrontend(event) {
-    // code to delete from frontend
-    const parent = event.target.parentElement;
-    let temp = parent.firstChild;
-    while (temp) {
-      parent.removeChild(temp);
-      temp = parent.firstChild;
-    }
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -28,22 +18,11 @@ class Lobby extends Component {
     this.refresh = this.refresh.bind(this);
     this.addMe = this.addMe.bind(this);
     this.deleteMe = this.deleteMe.bind(this);
-    this.checkLobby = this.checkLobby.bind(this);
-    this.isAuthorized = this.isAuthorized.bind(this);
-    this.ownsPlaylist = this.ownsPlaylist.bind(this);
-    this.sendHome = this.sendHome.bind(this);
   }
 
   componentDidMount() {
-    // Code for getting playlistID from URL
-    const url = window.location.href;
-    const index = window.location.href.indexOf('obby/');
-    const idURL = url.substring(index + 5);
-    this.setState({ playlistID: idURL }, function () {
-      Promise.all([this.checkLobby(), this.isAuthorized(), this.ownsPlaylist()])
-        .then(() => {
-          this.refresh();
-        });
+    this.setState({ playlistID: this.props.playlistID }, function () {
+      this.refresh();
     });
   }
 
@@ -51,40 +30,6 @@ class Lobby extends Component {
     const copyText = document.getElementById('linkInput');
     copyText.select();
     document.execCommand('copy');
-  }
-
-  checkLobby() {
-    const that = this;
-    fetch(`${process.env.REACT_APP_API_DOMAIN}/exists?lobbyID=${this.state.playlistID}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      if (response.status === 404) {
-        that.sendHome();
-      }
-    });
-  }
-
-  isAuthorized() {
-    if (!this.musicInstance.isAuthorized) {
-      this.sendHome();
-    }
-  }
-
-  ownsPlaylist() {
-    this.musicInstance.api.library.playlist(`p.${this.state.playlistID}`)
-      .catch(() => {
-        this.sendHome();
-      });
-  }
-
-  sendHome() {
-    this.props.history.push({
-      pathname: '/',
-    });
   }
 
   refresh() {
@@ -218,8 +163,8 @@ class Lobby extends Component {
 }
 
 Lobby.propTypes = {
-  history: PropTypes.object.isRequired,
   musicInstance: PropTypes.object.isRequired,
+  playlistID: PropTypes.string.isRequired,
 };
 
 export default withRouter(Lobby);

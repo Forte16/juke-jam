@@ -25,13 +25,7 @@ class Host extends Component {
   }
 
   componentDidMount() {
-    if (this.musicInstance.isAuthorized) {
-      this.getPlaylists();
-    } else {
-      this.props.history.push({
-        pathname: '/',
-      });
-    }
+    this.getPlaylists();
   }
 
   getPlaylists() {
