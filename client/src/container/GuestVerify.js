@@ -35,10 +35,13 @@ class GuestVerify extends Component {
     }).then((response) => {
       if (response.status === 404) {
         that.setState({ isValid: false });
+        return null;
       }
       return response.json();
     }).then((resp) => {
-      that.setState({ name: resp.lobby.name, isValid: true });
+      if (resp) {
+        that.setState({ name: resp.lobby.name, isValid: true });
+      }
     });
   }
 
