@@ -31,6 +31,19 @@ module.exports = {
       .then(res => res);
   },
 
+  updateLobby({
+    lobbyID,
+    name,
+    max,
+  }) {
+    return knex('lobbies')
+      .where('lobby_id', lobbyID)
+      .update({
+        'name': name,
+        'max_recommendations': max,
+      });
+  },
+
   addRecommendation({
     lobbyID,
     songID,

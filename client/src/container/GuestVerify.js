@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Guest from './Guest';
+import Verifying from '../presentational/Verifying';
 
 class GuestVerify extends Component {
   constructor() {
@@ -58,7 +59,7 @@ class GuestVerify extends Component {
       }
       return <Redirect to="/" />;
     }
-    return <div />;
+    return <Verifying />;
   }
 }
 

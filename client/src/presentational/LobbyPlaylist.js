@@ -6,7 +6,7 @@ import '../css/tailwind.css';
 import { Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
-const LobbyPlaylist = ({ playlist, clickFunc }) => (
+const LobbyPlaylist = ({ playlist, clickFunc, editFunc }) => (
   <Col className="playlist" key={playlist.id}>
     <span className="playlistLeft">
       <img className="cover" src={playlist.artwork} alt="" />
@@ -17,7 +17,10 @@ const LobbyPlaylist = ({ playlist, clickFunc }) => (
         {` ${playlist.name}`}
       </div>
       <div>
-        <input className="mdBtn" type="button" value="Go" onClick={e => clickFunc(e, playlist.id)} />
+        <input className="mdBtn" type="button" value="Go" onClick={() => clickFunc(playlist.id)} />
+      </div>
+      <div>
+        <input className="mdBtn" type="button" value="Edit" onClick={() => editFunc(playlist.id)} />
       </div>
     </span>
   </Col>
@@ -26,6 +29,7 @@ const LobbyPlaylist = ({ playlist, clickFunc }) => (
 LobbyPlaylist.propTypes = {
   playlist: PropTypes.object.isRequired,
   clickFunc: PropTypes.func.isRequired,
+  editFunc: PropTypes.func.isRequired,
 };
 
 export default LobbyPlaylist;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Lobby from './Lobby';
+import Edit from './Edit';
 import Verifying from '../presentational/Verifying';
 
-class LobbyVerify extends Component {
+class EditVerify extends Component {
   constructor() {
     super();
     this.state = {
@@ -12,6 +12,8 @@ class LobbyVerify extends Component {
       name: '',
       max: 0,
       isValid: '',
+      playlistArtwork: '',
+      playlistTitle: '',
     };
     this.checkLobby = this.checkLobby.bind(this);
     this.isAuthorized = this.isAuthorized.bind(this);
@@ -22,7 +24,7 @@ class LobbyVerify extends Component {
   componentDidMount() {
     // Code for getting playlistID from URL
     const url = window.location.href;
-    const index = window.location.href.indexOf('obby/');
+    const index = window.location.href.indexOf('edit/');
     const idURL = url.substring(index + 5);
     this.setState({ playlistID: idURL }, function () {
       Promise.all([this.isAuthorized(), this.ownsPlaylist()])
@@ -68,8 +70,13 @@ class LobbyVerify extends Component {
   ownsPlaylist() {
     return new Promise((resolve, reject) => {
       this.props.musicInstance.api.library.playlist(`p.${this.state.playlistID}`)
-        .then(() => resolve())
-        .catch(() => {
+        .then((resp) => {
+          this.setState({
+            playlistArtwork: window.MusicKit.formatArtworkURL(resp.attributes.artwork),
+            playlistTitle: resp.attributes.name,
+          });
+          resolve();
+        }).catch(() => {
           reject();
         });
     });
@@ -85,11 +92,12 @@ class LobbyVerify extends Component {
     if (this.state.isValid === true || this.state.isValid === false) {
       if (this.state.isValid === true) {
         return (
-          <Lobby
+          <Edit
             playlistID={this.state.playlistID}
             name={this.state.name}
             max={this.state.max}
-            musicInstance={this.props.musicInstance}
+            playlistArtwork={this.state.playlistArtwork}
+            playlistTitle={this.state.playlistTitle}
           />
         );
       }
@@ -99,9 +107,9 @@ class LobbyVerify extends Component {
   }
 }
 
-LobbyVerify.propTypes = {
+EditVerify.propTypes = {
   musicInstance: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
 };
 
-export default withRouter(LobbyVerify);
+export default withRouter(EditVerify);

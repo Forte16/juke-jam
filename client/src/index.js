@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './css/index.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import GuestVerify from './container/GuestVerify';
+import EditVerify from './container/EditVerify';
 import About from './presentational/About';
 import Mobile from './presentational/Mobile';
 import Home from './container/Home';
@@ -30,6 +31,7 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         <Route exact path="/" render={() => <Home musicInstance={musicInstance} />} />
         <Route exact path="/host" render={() => <HostVerify musicInstance={musicInstance} />} />
         <Route path="/host/lobby" render={() => <LobbyVerify musicInstance={musicInstance} />} />
+        <Route path="/host/edit" render={() => <EditVerify musicInstance={musicInstance} />} />
         <Route path="/recommend" render={() => <GuestVerify musicInstance={musicInstance} />} />
         <Route path="/about" component={About} />
         <Route component={NotFound} />

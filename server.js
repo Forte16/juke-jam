@@ -79,6 +79,13 @@ app.post('/add', (req, res) => {
   store.markRecommendation({ lobbyID, songID, status }).then(() => res.sendStatus(200));
 });
 
+app.post('/update', (req, res) => {
+  const lobbyID = req.body.playlistID;
+  const name = req.body.name;
+  const max = req.body.max;
+  store.updateLobby({ lobbyID, name, max }).then(() => res.sendStatus(200));
+});
+
 app.get('/exists', (req, res) => {
   const lobbyID = req.query.lobbyID;
   store.lobbyExists({ lobbyID }).then((result) => {

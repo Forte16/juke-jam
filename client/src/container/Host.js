@@ -27,6 +27,7 @@ class Host extends Component {
     this.logout = this.logout.bind(this);
     this.clicked = this.clicked.bind(this);
     this.lobbyClicked = this.lobbyClicked.bind(this);
+    this.editLobbyClicked = this.editLobbyClicked.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +146,12 @@ class Host extends Component {
     });
   }
 
+  editLobbyClicked(id) {
+    this.props.history.push({
+      pathname: `/host/edit/${id}`,
+    });
+  }
+
   render() {
     let spinner;
 
@@ -154,6 +161,7 @@ class Host extends Component {
         key={this.state.lobbyPlaylists[i].id}
         playlist={this.state.lobbyPlaylists[i]}
         clickFunc={() => this.lobbyClicked(this.state.lobbyPlaylists[i].id)}
+        editFunc={() => this.editLobbyClicked(this.state.lobbyPlaylists[i].id)}
       />);
     }
 
@@ -215,7 +223,7 @@ class Host extends Component {
           <span className="settingsWords pr-2">
             {'Max recommendations per person:'}
           </span>
-          <input className="pl-1" type="number" min="0" max="10" placeholder="0" onChange={this.handleMax} />
+          <input className="pl-1" type="number" min="0" max="10" value={this.state.max} onChange={this.handleMax} />
           <div id="maxSpan">
             <b>
               {'Note: '}

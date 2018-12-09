@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Host from './Host';
+import Verifying from '../presentational/Verifying';
 
 class HostVerify extends Component {
   constructor() {
@@ -28,7 +29,7 @@ class HostVerify extends Component {
         <Redirect to="/" />
       );
     }
-    return <div />;
+    return <Verifying />;
   }
 }
 
