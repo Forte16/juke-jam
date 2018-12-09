@@ -46,6 +46,7 @@ class Lobby extends Component {
       }),
     }).then(response => response.json())
       .then((resp) => {
+        if (resp.list.length === 0) return;
         this.musicInstance.api.songs(resp.list).then((songs) => {
           const recommendedSongs = [];
           for (let i = 0; i < songs.length; i += 1) {
