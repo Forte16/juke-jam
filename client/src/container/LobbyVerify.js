@@ -8,6 +8,8 @@ class LobbyVerify extends Component {
     super();
     this.state = {
       playlistID: '',
+      name: '',
+      max: 0,
       isValid: '',
     };
     this.checkLobby = this.checkLobby.bind(this);
@@ -22,9 +24,9 @@ class LobbyVerify extends Component {
     const index = window.location.href.indexOf('obby/');
     const idURL = url.substring(index + 5);
     this.setState({ playlistID: idURL }, function () {
-      Promise.all([this.checkLobby(), this.isAuthorized(), this.ownsPlaylist()])
+      Promise.all([this.isAuthorized(), this.ownsPlaylist()])
         .then(() => {
-          this.setState({ isValid: true });
+          this.checkLobby();
         });
     });
   }
@@ -40,7 +42,16 @@ class LobbyVerify extends Component {
     }).then((response) => {
       if (response.status === 404) {
         that.sendHome();
+        return null;
       }
+      return response.json();
+    }).then((resp) => {
+      if (resp == null) return;
+      this.setState({
+        isValid: true,
+        max: resp.lobby.max_recommendations,
+        name: resp.lobby.name,
+      });
     });
   }
 
@@ -69,6 +80,8 @@ class LobbyVerify extends Component {
         return (
           <Lobby
             playlistID={this.state.playlistID}
+            name={this.state.name}
+            max={this.state.max}
             musicInstance={this.props.musicInstance}
           />
         );

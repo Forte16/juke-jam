@@ -13,6 +13,7 @@ class Lobby extends Component {
     this.state = {
       playlistID: '',
       recommendedSongs: [],
+      spinner: true,
     };
     this.musicInstance = this.props.musicInstance;
     this.refresh = this.refresh.bind(this);
@@ -34,6 +35,7 @@ class Lobby extends Component {
 
   refresh() {
     const playlistID = this.state.playlistID;
+    this.setState({ spinner: true });
 
     fetch(`${process.env.REACT_APP_API_DOMAIN}/receive`, {
       method: 'POST',
@@ -46,7 +48,13 @@ class Lobby extends Component {
       }),
     }).then(response => response.json())
       .then((resp) => {
-        if (resp.list.length === 0) return;
+        if (resp.list.length === 0) {
+          this.setState({
+            recommendedSongs: [],
+            spinner: false,
+          });
+          return;
+        }
         this.musicInstance.api.songs(resp.list).then((songs) => {
           const recommendedSongs = [];
           for (let i = 0; i < songs.length; i += 1) {
@@ -60,7 +68,10 @@ class Lobby extends Component {
             };
             recommendedSongs.push(pushMe);
           }
-          this.setState({ recommendedSongs: recommendedSongs });
+          this.setState({
+            recommendedSongs: recommendedSongs,
+            spinner: false,
+          });
         });
       });
   }
@@ -125,6 +136,37 @@ class Lobby extends Component {
   }
 
   render() {
+    let max;
+    let songs;
+    if (this.props.max > 0) {
+      max = `Max recommendations per person: ${this.props.max}`;
+    } else {
+      max = 'No limit set for max recommendations per person.';
+    }
+
+    if (this.state.spinner) {
+      songs = (
+        <div className="text-center">
+          <div className="spinner" />
+        </div>
+      );
+    } else if (this.state.recommendedSongs.length === 0) {
+      songs = 'No songs have been recommended yet.';
+    } else {
+      songs = [];
+      for (let i = 0; i < this.state.recommendedSongs.length; i += 1) {
+        const song = this.state.recommendedSongs[i];
+        songs.push(
+          <RecommendedSong
+            key={song.songID}
+            addMe={this.addMe}
+            deleteMe={this.deleteMe}
+            song={song}
+          />,
+        );
+      }
+    }
+
     return (
       <div>
         <div className="code">
@@ -137,20 +179,16 @@ class Lobby extends Component {
             clickFunc={Lobby.getLink}
             value="Copy"
           />
+          <div className="text-sm italic">
+            {max}
+          </div>
         </div>
         <hr className="divider" />
         <div className="topPart">
-          {'Recommended songs from your friends:'}
+          <span>{`Recommended songs for ${this.props.name}:`}</span>
         </div>
         <div className="recommendedSongs">
-          {this.state.recommendedSongs.map(song => (
-            <RecommendedSong
-              key={song.songID}
-              addMe={this.addMe}
-              deleteMe={this.deleteMe}
-              song={song}
-            />
-          ))}
+          {songs}
         </div>
         <div className="text-center mt-4">
           <MainButton
@@ -166,6 +204,8 @@ class Lobby extends Component {
 Lobby.propTypes = {
   musicInstance: PropTypes.object.isRequired,
   playlistID: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  max: PropTypes.number.isRequired,
 };
 
 export default withRouter(Lobby);
