@@ -201,7 +201,7 @@ class Host extends Component {
         </div>
 
         <div className="settingsWords">
-          {'Checkout your lobbies:'}
+          {'Check out a current lobby:'}
         </div>
         {spinner}
         <div id="playlistsSection">

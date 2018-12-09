@@ -100,7 +100,6 @@ app.get('/exists', (req, res) => {
 app.get('/getAll', (req, res) => {
   store.getAllLobbies().then((result) => {
     const lobbies = result.map(x => x.lobby_id);
-    console.log(lobbies);
     res.send({ lobbies: lobbies });
   });
 });
