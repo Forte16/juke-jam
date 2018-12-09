@@ -7,21 +7,26 @@ import PropTypes from 'prop-types';
 import MainButton from '../presentational/MainButton';
 import MiniButton from '../presentational/MiniButton';
 import Playlist from '../presentational/Playlist';
+import LobbyPlaylist from '../presentational/LobbyPlaylist';
 
 class Host extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playlists: [],
+      allPlaylists: [],
+      lobbyPlaylists: [],
+      notLobbyPlaylists: [],
       max: 0,
       idSelected: 0,
       name: '',
+      spinner: true,
     };
     this.musicInstance = this.props.musicInstance;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleMax = this.handleMax.bind(this);
     this.logout = this.logout.bind(this);
     this.clicked = this.clicked.bind(this);
+    this.lobbyClicked = this.lobbyClicked.bind(this);
   }
 
   componentDidMount() {
@@ -29,28 +34,51 @@ class Host extends Component {
   }
 
   getPlaylists() {
-    this.musicInstance.api.library.playlists()
-      .then((response) => {
-        const ids = [];
-        for (let i = 0; i < response.length; i += 1) {
-          ids.push(response[i].id);
-        }
-        for (let i = 0; i < response.length; i += 1) {
-          this.musicInstance.api.library.playlist(ids[i])
-            .then((playlist) => {
-              let tracks = playlist.relationships.tracks.data.length;
-              tracks = tracks === 100 ? '100+' : tracks;
-              const obj = {
-                name: playlist.attributes.name,
-                id: playlist.id.substring(2),
-                key: i,
-                artwork: window.MusicKit.formatArtworkURL(playlist.attributes.artwork),
-                tracks: tracks,
-              };
-              this.setState({ playlists: [...this.state.playlists, obj] }); // eslint-disable-line
-            });
-        }
+    const allPlaylists = this.state.allPlaylists;
+    this.musicInstance.api.library.playlists({ limit: 200 }).then((response) => {
+      const ids = [];
+      for (let i = 0; i < response.length; i += 1) {
+        const playlist = response[i];
+        const obj = {
+          name: playlist.attributes.name,
+          id: playlist.id.substring(2),
+          key: i,
+          artwork: window.MusicKit.formatArtworkURL(playlist.attributes.artwork),
+        };
+        ids.push(response[i].id);
+        allPlaylists.push(obj);
+      }
+      this.setState({ allPlaylists: allPlaylists }, function () {
+        fetch(`${process.env.REACT_APP_API_DOMAIN}/getAll`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }).then(response2 => response2.json()).then((resp) => {
+          const lobbies = resp.lobbies;
+          const lobbyPlaylists = [];
+          const notLobbyPlaylists = [];
+          const playlists = this.state.allPlaylists;
+          const allFoundPlaylists = playlists.map(x => x.id);
+
+          for (let j = 0; j < allFoundPlaylists.length; j += 1) {
+            const id = allFoundPlaylists[j];
+            const plist = playlists[j];
+            if (lobbies.includes(id)) {
+              lobbyPlaylists.push(plist);
+            } else {
+              notLobbyPlaylists.push(plist);
+            }
+          }
+          this.setState({
+            lobbyPlaylists: lobbyPlaylists,
+            notLobbyPlaylists: notLobbyPlaylists,
+            spinner: false,
+          });
+        });
       });
+    });
   }
 
   handleSubmit() {
@@ -111,114 +139,94 @@ class Host extends Component {
     this.setState({ idSelected: id });
   }
 
+  lobbyClicked(id) {
+    this.props.history.push({
+      pathname: `/host/lobby/${id}`,
+    });
+  }
+
   render() {
-    if (!this.musicInstance.isAuthorized) {
-      // send them back to host
+    let spinner;
+
+    const lobbyPlaylists = [];
+    for (let i = 0; i < this.state.lobbyPlaylists.length; i += 1) {
+      lobbyPlaylists.push(<LobbyPlaylist
+        key={this.state.lobbyPlaylists[i].id}
+        playlist={this.state.lobbyPlaylists[i]}
+        clickFunc={() => this.lobbyClicked(this.state.lobbyPlaylists[i].id)}
+      />);
     }
 
-    const playlists = [];
-    for (let i = 0; i < this.state.playlists.length; i += 1) {
-      playlists.push(<Playlist
-        key={this.state.playlists[i].id}
-        playlist={this.state.playlists[i]}
-        clickFunc={() => this.clicked(this.state.playlists[i].id)}
+    const notLobbyPlaylists = [];
+    for (let i = 0; i < this.state.notLobbyPlaylists.length; i += 1) {
+      notLobbyPlaylists.push(<Playlist
+        key={this.state.notLobbyPlaylists[i].id}
+        playlist={this.state.notLobbyPlaylists[i]}
+        clickFunc={() => this.clicked(this.state.notLobbyPlaylists[i].id)}
       />);
+    }
+
+    if (this.state.spinner) {
+      spinner = (
+        <div className="text-center">
+          <div className="spinner" />
+        </div>
+      );
+    } else {
+      spinner = (<div />);
     }
 
     return (
       <div>
-        <form>
-          <div className="Top">
-            <div className="words">
-              {'Select the settings for your Juke Jam party!'}
-            </div>
-            <div>
-              <span className="mr-1">Not your playlists?</span>
-              <MiniButton
-                clickFunc={this.logout}
-                value="Logout"
-              />
-            </div>
-            <hr className="divider4" />
+        <div className="Top">
+          <div className="words">
+            {'Select the settings for your Juke Jam party!'}
           </div>
-
-          <div className="Middle">
-            <div className="settingsWords">
-              {'Select your playlist:'}
-            </div>
-
-            <div id="playlistsSection">
-              <Row>
-                {playlists}
-              </Row>
-            </div>
-            <div className="maxRecSection">
-              <span className="settingsWords">
-                {'Max recommendations per person:'}
-              </span>
-              <table>
-                <tbody>
-                  <tr>
-
-                    <td>
-                      <select id="select" onChange={this.handleMax} className="form-control">
-                        <option value={0}>
-                          {'0'}
-                        </option>
-                        <option value={1}>
-                          {'1'}
-                        </option>
-                        <option value={2}>
-                          {'2'}
-                        </option>
-                        <option value={3}>
-                          {'3'}
-                        </option>
-                        <option value={4}>
-                          {'4'}
-                        </option>
-                        <option value={5}>
-                          {'5'}
-                        </option>
-                        <option value={6}>
-                          {'6'}
-                        </option>
-                        <option value={7}>
-                          {'7'}
-                        </option>
-                        <option value={8}>
-                          {'8'}
-                        </option>
-                        <option value={9}>
-                          {'9'}
-                        </option>
-                        <option value={10}>
-                          {'10'}
-                        </option>
-                      </select>
-                    </td>
-                    <td>
-                      <p id="maxSpan">
-                        <b>
-                          <i>
-                            {'Note: '}
-                          </i>
-                        </b>
-                        {'The default value of 0 is no limit.'}
-                      </p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <span className="settingsWords">
-                {'Name of lobby:'}
-              </span>
-              <div>
-                <input type="text" className="ml-4 pl-2 textBar" id="nameTextBar" onChange={(event) => { this.handleNameChange(event); }} />
-              </div>
-            </div>
+          <div>
+            <span className="mr-1">Not your playlists?</span>
+            <MiniButton
+              clickFunc={this.logout}
+              value="Logout"
+            />
           </div>
-        </form>
+          <hr className="divider4" />
+        </div>
+
+        <div className="settingsWords">
+          {'Checkout your lobbies:'}
+        </div>
+        {spinner}
+        <div id="playlistsSection">
+          <Row>
+            {lobbyPlaylists}
+          </Row>
+        </div>
+
+        <div className="settingsWords">
+          {'Select your playlist:'}
+        </div>
+        {spinner}
+        <div id="playlistsSection">
+          <Row>
+            {notLobbyPlaylists}
+          </Row>
+        </div>
+        <div className="maxRecSection">
+          <span className="settingsWords pr-2">
+            {'Max recommendations per person:'}
+          </span>
+          <input className="pl-1" type="number" min="0" max="10" placeholder="0" onChange={this.handleMax} />
+          <div id="maxSpan">
+            <b>
+              {'Note: '}
+            </b>
+            {'The default value of 0 is no limit.'}
+          </div>
+          <span className="settingsWords pr-2">
+            {'Name of lobby:'}
+          </span>
+          <input type="text" className="pl-2 textBar" id="nameTextBar" onChange={(event) => { this.handleNameChange(event); }} />
+        </div>
         <div className="Bottom">
           <MainButton
             clickFunc={this.handleSubmit}

@@ -25,6 +25,12 @@ module.exports = {
       .then(res => res);
   },
 
+  getAllLobbies() {
+    return knex.select('lobby_id')
+      .from('lobbies')
+      .then(res => res);
+  },
+
   addRecommendation({
     lobbyID,
     songID,
