@@ -10,11 +10,6 @@ button {
   margin-left: 35px;
 }
 
-.cover {
-  max-height: 100px;
-  max-width: 100px;
-}
-
 .words {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -40,12 +35,18 @@ button {
   font-size: 20px;
 }
 
+.cover {
+  max-height: 170px;
+  max-width: 170px;
+}
+
 .playlist {
   display: flex;
-  width: 267px;
+  width: 174px;
   border: solid 2px white;
-  background-color: #444;
+  background-color: transparent;
   cursor: pointer;
+  text-align: center;
 
   @time: 200ms;
 
@@ -59,17 +60,14 @@ button {
   border: solid 2px black;
 }
 
-.playlistRight {
-  position: relative;
-  padding-top: 40px;
-}
-
-.playlistRightInners {
-  width: 140px;
+.playlistName {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  margin-top: -10px;
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 160px;
 }
 
 .Bottom {
