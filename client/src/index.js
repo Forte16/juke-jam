@@ -17,7 +17,7 @@ const music = AppleMusicAuth.sharedProvider();
 music.configure();
 const musicInstance = AppleMusicAuth.getMusicInstance();
 
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   // serve mobile view
   ReactDOM.render(
     <Mobile />,
