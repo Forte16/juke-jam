@@ -36,23 +36,31 @@ button {
 }
 
 .cover {
-  max-height: 170px;
-  max-width: 170px;
+  height: 170px;
+  width: 170px;
 }
 
-.playlist {
+.allplaylists {
   display: flex;
   width: 174px;
   border: solid 2px white;
   background-color: transparent;
+}
+
+.playlist {
+  .allplaylists;
+
   cursor: pointer;
-  text-align: center;
 
   @time: 200ms;
 
   -webkit-transition: border-color @time linear, color @time linear;
   -ms-transition: border-color @time linear, color @time linear;
   transition: border-color @time linear, color @time linear;
+}
+
+.lobbyPlaylist {
+  .allplaylists;
 }
 
 .playlistActive {
@@ -68,6 +76,18 @@ button {
   margin-left: 5px;
   margin-right: 5px;
   width: 160px;
+}
+
+.lobbyPlaylistName {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+  width: 160px;
+}
+
+.lobbyPlaylistPadding {
+  padding-top: 23px;
 }
 
 .Bottom {

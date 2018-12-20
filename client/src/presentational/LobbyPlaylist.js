@@ -7,19 +7,15 @@ import { Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const LobbyPlaylist = ({ playlist, clickFunc, editFunc }) => (
-  <Col className="playlist" key={playlist.id}>
-    <span className="playlistLeft">
+  <Col className="lobbyPlaylist" key={playlist.id}>
+    <span>
       <img className="cover" src={playlist.artwork} alt="" />
-    </span>
-    <span className="playlistRight">
-      <div className="playlistRightInners">
+      <div className="playlistName">
         &#9835;
         {` ${playlist.name}`}
       </div>
-      <div>
+      <div className="center pb-1">
         <input className="mdBtn" type="button" value="Go" onClick={() => clickFunc(playlist.id)} />
-      </div>
-      <div>
         <input className="mdBtn" type="button" value="Edit" onClick={() => editFunc(playlist.id)} />
       </div>
     </span>
