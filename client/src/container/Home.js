@@ -71,10 +71,10 @@ class Home extends Component {
           Juke Jam
         </div>
         <div className="about">
-          Juke Jam is a web application that allows users to easily receive recommendations
-           for music at social events, and effortlessly add the suggestions to their party playlist.
+          Juke Jam lets users easily receive music recommendations and effortlessly
+          add the suggestions to their party playlist.
         </div>
-        <div className="center">
+        <div className="center text-sm">
           <a href="/about" className="goToWebsite">
             Click here to learn more.
           </a>
