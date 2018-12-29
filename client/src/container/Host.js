@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import '../css/Host.css';
 import '../css/tailwind.css';
@@ -205,9 +204,7 @@ class Host extends Component {
         </div>
         {spinner}
         <div id="playlistsSection">
-          <Row>
-            {lobbyPlaylists}
-          </Row>
+          {lobbyPlaylists}
         </div>
 
         <div className="settingsWords">
@@ -215,9 +212,7 @@ class Host extends Component {
         </div>
         {spinner}
         <div id="playlistsSection">
-          <Row>
-            {notLobbyPlaylists}
-          </Row>
+          {notLobbyPlaylists}
         </div>
         <div className="maxRecSection">
           <span className="settingsWords pr-2">

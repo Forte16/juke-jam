@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 
-import { Col } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
-
 const Playlist = ({ playlist, clickFunc }) => (
-  <Col className="playlist" key={playlist.id} onClick={e => clickFunc(e, playlist.id)}>
+  <div className="playlist" key={playlist.id} onClick={e => clickFunc(e, playlist.id)}>
     <input id={playlist.id} type="radio" name="playlists" className="buttons hidden" value={playlist.id} />
     <span>
       <img className="cover" src={playlist.artwork} alt="" />
@@ -16,7 +13,7 @@ const Playlist = ({ playlist, clickFunc }) => (
         {` ${playlist.name}`}
       </div>
     </span>
-  </Col>
+  </div>
 );
 
 Playlist.propTypes = {

@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 
-import { Col } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
-
 const LobbyPlaylist = ({ playlist, clickFunc, editFunc }) => (
-  <Col className="lobbyPlaylist" key={playlist.id}>
+  <div className="lobbyPlaylist" key={playlist.id}>
     <span>
       <img className="cover" src={playlist.artwork} alt="" />
       <div className="playlistName">
@@ -19,7 +16,7 @@ const LobbyPlaylist = ({ playlist, clickFunc, editFunc }) => (
         <input className="mdBtn" type="button" value="Edit" onClick={() => editFunc(playlist.id)} />
       </div>
     </span>
-  </Col>
+  </div>
 );
 
 LobbyPlaylist.propTypes = {
