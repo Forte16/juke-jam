@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Lobby from './Lobby';
+import Lobby from '../container/Lobby';
 import Verifying from '../presentational/Verifying';
+import Header from '../presentational/Header';
 
 class LobbyVerify extends Component {
   constructor() {
@@ -85,12 +86,15 @@ class LobbyVerify extends Component {
     if (this.state.isValid === true || this.state.isValid === false) {
       if (this.state.isValid === true) {
         return (
-          <Lobby
-            playlistID={this.state.playlistID}
-            name={this.state.name}
-            max={this.state.max}
-            musicInstance={this.props.musicInstance}
-          />
+          <div>
+            <Header />
+            <Lobby
+              playlistID={this.state.playlistID}
+              name={this.state.name}
+              max={this.state.max}
+              musicInstance={this.props.musicInstance}
+            />
+          </div>
         );
       }
       return <Redirect to="/" />;

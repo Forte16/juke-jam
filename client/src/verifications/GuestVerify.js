@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Guest from './Guest';
+import Guest from '../container/Guest';
 import Verifying from '../presentational/Verifying';
+import Header from '../presentational/Header';
 
 class GuestVerify extends Component {
   constructor() {

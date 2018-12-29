@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Host from './Host';
+import Host from '../container/Host';
 import Verifying from '../presentational/Verifying';
+import Header from '../presentational/Header';
 
 class HostVerify extends Component {
   constructor() {
@@ -23,7 +24,12 @@ class HostVerify extends Component {
   render() {
     if (this.state.isValid === true || this.state.isValid === false) {
       if (this.state.isValid === true) {
-        return <Host musicInstance={this.props.musicInstance} />;
+        return (
+          <div>
+            <Header />
+            <Host musicInstance={this.props.musicInstance} />
+            </div>
+        );
       }
       return (
         <Redirect to="/" />
