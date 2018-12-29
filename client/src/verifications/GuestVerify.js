@@ -51,11 +51,14 @@ class GuestVerify extends Component {
     if (this.state.isValid === true || this.state.isValid === false) {
       if (this.state.isValid === true) {
         return (
-          <Guest
-            name={this.state.name}
-            playlistID={this.state.playlistID}
-            musicInstance={this.props.musicInstance}
-          />
+          <div>
+            <Header />
+            <Guest
+              name={this.state.name}
+              playlistID={this.state.playlistID}
+              musicInstance={this.props.musicInstance}
+            />
+          </div>
         );
       }
       return <Redirect to="/" />;
