@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import MainButton from './MainButton';
+import MiniButton from './MiniButton';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 
@@ -11,9 +13,19 @@ const LobbyPlaylist = ({ playlist, clickFunc, editFunc }) => (
         &#9835;
         {` ${playlist.name}`}
       </div>
-      <div className="center pb-1">
-        <input className="mdBtn" type="button" value="Go" onClick={() => clickFunc(playlist.id)} />
-        <input className="mdBtn" type="button" value="Edit" onClick={() => editFunc(playlist.id)} />
+      <div className="center -mb-8">
+        <div>
+          <MainButton
+            clickFunc={() => clickFunc(playlist.id)}
+            value="Go"
+          />
+        </div>
+        <div>
+          <MiniButton
+            clickFunc={() => editFunc(playlist.id)}
+            value="Edit"
+          />
+        </div>
       </div>
     </span>
   </div>
