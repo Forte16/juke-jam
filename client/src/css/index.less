@@ -94,9 +94,11 @@ body {
   margin: 0;
   box-shadow: 1px 4px 7px rgba(0, 0, 0, 0.5);
   text-align: center;
-  font-size: 36px;
-  padding-top: 10px;
+  font-size: 50px;
+  padding-top: 7px;
   position: fixed;
+  display: flex;
+  line-height: 0.2;
 }
 
 #headerBuffer {
@@ -104,10 +106,14 @@ body {
   padding-top: 80px;
 }
 
-.headerBack {
-  padding-top: 20px;
-  padding-left: 20px;
-  font-size: 12px;
-  float: left;
-  position: absolute;
+.headerLogo {
+  height: 56px;
+  margin-top: -10px;
+}
+
+#headerClick {
+  &:hover {
+    cursor: pointer;
+    opacity: 0.85;
+  }
 }
