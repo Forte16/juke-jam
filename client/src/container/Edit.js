@@ -50,24 +50,33 @@ class Edit extends Component {
   render() {
     return (
       <div>
-        <div className="text-center">
-          <div>
-            {this.props.playlistTitle}
+        <div className="editContainer">
+          <div className="text-center">
+            <div className="italic mt-5">
+              {'update lobby settings for playlist'}
+            </div>
+            <div className="code2 mt mb-8">
+              {this.props.playlistTitle}
+            </div>
           </div>
-          <img className="cover" src={this.props.playlistArtwork} alt="" />
-        </div>
-        <div>
-          <span>Name: </span>
-          <input type="text" className="pl-2 textBar" value={this.state.name} id="nameTextBar" onChange={(event) => { this.handleNameChange(event); }} />
-        </div>
-        <div>
-          <input className="pl-1" type="number" min="0" max="10" value={this.state.max} onChange={this.handleMax} />
-        </div>
-        <div className="Bottom">
-          <MainButton
-            clickFunc={this.updateSettings}
-            value="Submit"
-          />
+          <div className="ml-5">
+            <span>
+              {'Lobby name:'}
+            </span>
+            <input type="text" className="pl-2 ml-3 textBar" value={this.state.name} id="nameTextBar" onChange={(event) => { this.handleNameChange(event); }} />
+          </div>
+          <div className="ml-5">
+            <span>
+              {'Max recommendations:'}
+            </span>
+            <input id="numberPicker" className="ml-3" type="number" min="0" max="10" value={this.state.max} onChange={this.handleMax} />
+          </div>
+          <div className="text-center mt-8">
+            <MainButton
+              clickFunc={this.updateSettings}
+              value="Update"
+            />
+          </div>
         </div>
       </div>
     );
@@ -77,7 +86,6 @@ class Edit extends Component {
 Edit.propTypes = {
   playlistID: PropTypes.string.isRequired,
   playlistTitle: PropTypes.string.isRequired,
-  playlistArtwork: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   max: PropTypes.number.isRequired,
 };

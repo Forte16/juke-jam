@@ -12,7 +12,6 @@ class EditVerify extends Component {
       name: '',
       max: 0,
       isValid: '',
-      playlistArtwork: '',
       playlistTitle: '',
     };
     this.checkLobby = this.checkLobby.bind(this);
@@ -72,7 +71,6 @@ class EditVerify extends Component {
       this.props.musicInstance.api.library.playlist(`p.${this.state.playlistID}`)
         .then((resp) => {
           this.setState({
-            playlistArtwork: window.MusicKit.formatArtworkURL(resp.attributes.artwork),
             playlistTitle: resp.attributes.name,
           });
           resolve();
@@ -96,7 +94,6 @@ class EditVerify extends Component {
             playlistID={this.state.playlistID}
             name={this.state.name}
             max={this.state.max}
-            playlistArtwork={this.state.playlistArtwork}
             playlistTitle={this.state.playlistTitle}
           />
         );
