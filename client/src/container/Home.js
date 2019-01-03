@@ -66,7 +66,7 @@ class Home extends Component {
       );
     }
     return (
-      <div className="main">
+      <div className="text-center">
         <div className="title">
           Juke Jam
         </div>
@@ -75,7 +75,7 @@ class Home extends Component {
           add the suggestions to their party playlist.
         </div>
         <div className="center text-sm">
-          <a href="/about" className="goToWebsite">
+          <a href="/about" className="link">
             Click here to learn more.
           </a>
         </div>

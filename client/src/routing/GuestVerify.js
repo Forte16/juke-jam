@@ -3,7 +3,6 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Guest from '../container/Guest';
 import Verifying from '../presentational/Verifying';
-import Header from '../presentational/Header';
 
 class GuestVerify extends Component {
   constructor() {
@@ -51,14 +50,11 @@ class GuestVerify extends Component {
     if (this.state.isValid === true || this.state.isValid === false) {
       if (this.state.isValid === true) {
         return (
-          <div>
-            <Header />
-            <Guest
-              name={this.state.name}
-              playlistID={this.state.playlistID}
-              musicInstance={this.props.musicInstance}
-            />
-          </div>
+          <Guest
+            name={this.state.name}
+            playlistID={this.state.playlistID}
+            musicInstance={this.props.musicInstance}
+          />
         );
       }
       return <Redirect to="/" />;

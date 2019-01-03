@@ -1,19 +1,26 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "Lato";
+  background-color: #fff;
+  color: #444;
+}
+
+#root {
+  margin: 0;
 }
 
 .allBtns {
   cursor: pointer;
-  background-color: white;
-  color: #444;
+  background-color: #444;
+  color: #fff;
 
   @time: 200ms;
 
   &:hover {
-    background-color: #444;
-    color: white;
+    background-color: #888;
     -webkit-transition: background-color @time linear, color @time linear;
     -ms-transition: background-color @time linear, color @time linear;
     transition: background-color @time linear, color @time linear;
@@ -47,4 +54,60 @@ body {
 .textBar {
   border: #444 solid 1px;
   height: 33px;
+}
+
+.textBarForSearch {
+  .textBar;
+
+  border-right: 0;
+}
+
+.link {
+  color: #0c59b0;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.spinner {
+  border: 6px solid white;
+  border-top: 6px solid #444;
+  border-radius: 50%;
+  text-align: center;
+  width: 45px;
+  height: 45px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.header {
+  width: 100%;
+  height: 70px;
+  color: white;
+  background-color: #444;
+  margin: 0;
+  box-shadow: 1px 4px 7px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-size: 36px;
+  padding-top: 10px;
+  position: fixed;
+}
+
+#headerBuffer {
+  margin: 0;
+  padding-top: 80px;
+}
+
+.headerBack {
+  padding-top: 20px;
+  padding-left: 20px;
+  font-size: 12px;
+  float: left;
+  position: absolute;
 }

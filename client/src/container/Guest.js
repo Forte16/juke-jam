@@ -108,13 +108,15 @@ class Guest extends Component {
     }
 
     return (
-      <div className="main">
+      <div className="text-center">
         <div>
-          <div className="code2">
+          <div className="italic">
+            {'you are recommending songs for'}
+          </div>
+          <div className="lobbyName">
             { this.props.name }
           </div>
         </div>
-        <hr className="divider" />
         <div className="searchWords">
          Search for a track you'd like to recommend below:
         </div>

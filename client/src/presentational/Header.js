@@ -3,8 +3,11 @@ import '../css/tailwind.css';
 import '../css/index.css';
 
 const Header = () => (
-  <div className="text-xl">
-    Initial Header...
+  <div className="header">
+      Juke Jam
+      <span className="headerBack pin-l">
+        Go Home
+      </span>
   </div>
 );
 

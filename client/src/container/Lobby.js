@@ -184,8 +184,13 @@ class Lobby extends Component {
           </div>
         </div>
         <hr className="divider" />
-        <div className="topPart">
-          <span>{`Recommended songs for ${this.props.name}:`}</span>
+        <div className="text-center mt-6">
+          <div className="italic">
+            {'recommended songs for'}
+          </div>
+          <div className="lobbyName">
+            { this.props.name }
+          </div>
         </div>
         <div className="recommendedSongs">
           {songs}

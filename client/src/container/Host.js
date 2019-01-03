@@ -185,40 +185,37 @@ class Host extends Component {
 
     return (
       <div>
-        <div className="Top">
-          <div className="words">
-            {'Select the settings for your Juke Jam party!'}
-          </div>
-          <div>
-            <span className="mr-1">Not your playlists?</span>
-            <MiniButton
-              clickFunc={this.logout}
-              value="Logout"
-            />
-          </div>
-          <hr className="divider4" />
+        <div>
+          <span className="mr-1">Not your playlists?</span>
+          <MiniButton
+            clickFunc={this.logout}
+            value="Logout"
+          />
         </div>
 
-        <div className="settingsWords">
-          {'Check out a current lobby:'}
+        <div className="hostSubsection">
+          {'CHECK OUT A CURRENT LOBBY'}
         </div>
         {spinner}
         <div id="playlistsSection">
           {lobbyPlaylists}
+        </div>
+        <div className="hostSubsection">
+          {'CREATE A NEW LOBBY'}
         </div>
 
         <div className="settingsWords">
           {'Select your playlist:'}
         </div>
         {spinner}
-        <div id="playlistsSection">
+        <div id="playlistsSection pt-1">
           {notLobbyPlaylists}
         </div>
         <div className="maxRecSection">
           <span className="settingsWords pr-2">
             {'Max recommendations per person:'}
           </span>
-          <input className="pl-1" type="number" min="0" max="10" value={this.state.max} onChange={this.handleMax} />
+          <input id="numberPicker" type="number" min="0" max="10" value={this.state.max} onChange={this.handleMax} />
           <div id="maxSpan">
             <b>
               {'Note: '}

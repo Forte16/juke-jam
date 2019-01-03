@@ -2,13 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import GuestVerify from './verifications/GuestVerify';
-import EditVerify from './verifications/EditVerify';
+import GuestVerify from './routing/GuestVerify';
+import EditVerify from './routing/EditVerify';
 import About from './presentational/About';
 import Mobile from './presentational/Mobile';
 import Home from './container/Home';
-import HostVerify from './verifications/HostVerify';
-import LobbyVerify from './verifications/LobbyVerify';
+import HostVerify from './routing/HostVerify';
+import LobbyVerify from './routing/LobbyVerify';
+import HeaderRoute from './routing/HeaderRoute';
 import NotFound from './presentational/NotFound';
 import registerServiceWorker from './registerServiceWorker';
 import AppleMusicAuth from './AppleMusicAuth';
@@ -29,10 +30,10 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     <Router>
       <Switch>
         <Route exact path="/" render={() => <Home musicInstance={musicInstance} />} />
-        <Route exact path="/host" render={() => <HostVerify musicInstance={musicInstance} />} />
-        <Route path="/host/lobby" render={() => <LobbyVerify musicInstance={musicInstance} />} />
-        <Route path="/host/edit" render={() => <EditVerify musicInstance={musicInstance} />} />
-        <Route path="/recommend" render={() => <GuestVerify musicInstance={musicInstance} />} />
+        <HeaderRoute exact path="/host" render={() => <HostVerify musicInstance={musicInstance} />} />
+        <HeaderRoute path="/host/lobby" render={() => <LobbyVerify musicInstance={musicInstance} />} />
+        <HeaderRoute path="/host/edit" render={() => <EditVerify musicInstance={musicInstance} />} />
+        <HeaderRoute path="/recommend" render={() => <GuestVerify musicInstance={musicInstance} />} />
         <Route path="/about" component={About} />
         <Route component={NotFound} />
       </Switch>

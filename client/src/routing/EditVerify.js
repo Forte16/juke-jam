@@ -3,7 +3,6 @@ import { Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Edit from '../container/Edit';
 import Verifying from '../presentational/Verifying';
-import Header from '../presentational/Header';
 
 class EditVerify extends Component {
   constructor() {
@@ -93,16 +92,13 @@ class EditVerify extends Component {
     if (this.state.isValid === true || this.state.isValid === false) {
       if (this.state.isValid === true) {
         return (
-          <div>
-            <Header />
-            <Edit
-              playlistID={this.state.playlistID}
-              name={this.state.name}
-              max={this.state.max}
-              playlistArtwork={this.state.playlistArtwork}
-              playlistTitle={this.state.playlistTitle}
-            />
-        </div>
+          <Edit
+            playlistID={this.state.playlistID}
+            name={this.state.name}
+            max={this.state.max}
+            playlistArtwork={this.state.playlistArtwork}
+            playlistTitle={this.state.playlistTitle}
+          />
         );
       }
       return <Redirect to="/" />;
