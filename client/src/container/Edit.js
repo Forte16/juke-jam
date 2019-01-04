@@ -33,6 +33,9 @@ class Edit extends Component {
     }).then((resp) => {
       if (resp.status === 200) {
         alert('Your settings have been updated!');
+        this.props.history.push({
+          pathname: '/host',
+        });
       } else {
         alert('Something went wrong...');
       }
@@ -88,6 +91,7 @@ Edit.propTypes = {
   playlistTitle: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   max: PropTypes.number.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default withRouter(Edit);
