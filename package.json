@@ -23,7 +23,8 @@
     "start": "concurrently --kill-others \"npm run server\" \"cd client && npm run start\"",
     "server": "nodemon server.js",
     "lint": "eslint .",
-    "heroku-postbuild": "cd client && npm i && npm install --only=dev && npm run build"
+    "heroku-postbuild": "cd client && npm i && npm install --only=dev && npm run build",
+    "deploy": "git push heroku master"
   },
   "engines": {
     "node": "10.0.0"
