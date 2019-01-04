@@ -14,7 +14,6 @@ class Home extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.goToLobby = this.goToLobby.bind(this);
-    this.joinLobby = this.joinLobby.bind(this);
   }
 
   login() {
