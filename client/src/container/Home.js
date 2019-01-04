@@ -37,13 +37,6 @@ class Home extends Component {
     });
   }
 
-  joinLobby() {
-    const code = document.getElementById('lobbyText').value;
-    this.props.history.push({
-      pathname: `/recommend/${code}`,
-    });
-  }
-
   render() {
     let buttonDiv;
     if (this.musicInstance.isAuthorized) {
