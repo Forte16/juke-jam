@@ -7,6 +7,7 @@ import MainButton from '../presentational/MainButton';
 import MiniButton from '../presentational/MiniButton';
 import Playlist from '../presentational/Playlist';
 import LobbyPlaylist from '../presentational/LobbyPlaylist';
+import Scroller from './Scroller';
 
 class Host extends Component {
   constructor(props) {
@@ -154,7 +155,7 @@ class Host extends Component {
   render() {
     let spinner;
 
-    const lobbyPlaylists = [];
+    let lobbyPlaylists = [];
     for (let i = 0; i < this.state.lobbyPlaylists.length; i += 1) {
       lobbyPlaylists.push(<LobbyPlaylist
         key={this.state.lobbyPlaylists[i].id}
@@ -164,13 +165,25 @@ class Host extends Component {
       />);
     }
 
-    const notLobbyPlaylists = [];
+    if (lobbyPlaylists.length) {
+      lobbyPlaylists = <Scroller components={lobbyPlaylists} />;
+    } else {
+      lobbyPlaylists = <span />;
+    }
+
+    let notLobbyPlaylists = [];
     for (let i = 0; i < this.state.notLobbyPlaylists.length; i += 1) {
       notLobbyPlaylists.push(<Playlist
         key={this.state.notLobbyPlaylists[i].id}
         playlist={this.state.notLobbyPlaylists[i]}
         clickFunc={() => this.clicked(this.state.notLobbyPlaylists[i].id)}
       />);
+    }
+
+    if (notLobbyPlaylists.length) {
+      notLobbyPlaylists = <Scroller components={notLobbyPlaylists} />;
+    } else {
+      notLobbyPlaylists = <span />;
     }
 
     if (this.state.spinner) {
@@ -193,41 +206,44 @@ class Host extends Component {
           />
         </div>
 
-        <div className="hostSubsection">
+        <div className="hostSubsection mt-4">
           {'CHECK OUT A CURRENT LOBBY'}
         </div>
+
         {spinner}
-        <div id="playlistsSection">
-          {lobbyPlaylists}
-        </div>
-        <div className="hostSubsection">
+        {lobbyPlaylists}
+
+        <div className="hostSubsection mt-8">
           {'CREATE A NEW LOBBY'}
         </div>
 
-        <div className="settingsWords">
+        <div className="settingsWords -mb-3">
+          <span className="numbered"> 1. </span>
           {'Select your playlist:'}
         </div>
+
         {spinner}
-        <div id="playlistsSection pt-1">
-          {notLobbyPlaylists}
-        </div>
+        {notLobbyPlaylists}
+
         <div className="maxRecSection">
           <span className="settingsWords pr-2">
-            {'Max recommendations per person:'}
+            <span className="numbered"> 2. </span>
+            {'Set max recommendations per person:'}
           </span>
           <input id="numberPicker" type="number" min="0" max="10" value={this.state.max} onChange={this.handleMax} />
-          <div id="maxSpan">
+          <div id="maxSpan" className="mb-6">
             <b>
               {'Note: '}
             </b>
             {'The default value of 0 is no limit.'}
           </div>
           <span className="settingsWords pr-2">
-            {'Name of lobby:'}
+            <span className="numbered"> 3. </span>
+            {'Name your lobby:'}
           </span>
           <input type="text" className="pl-2 textBar" id="nameTextBar" onChange={(event) => { this.handleNameChange(event); }} />
         </div>
-        <div className="Bottom">
+        <div className="Bottom text-center mb-6">
           <MainButton
             clickFunc={this.handleSubmit}
             value="Submit"
