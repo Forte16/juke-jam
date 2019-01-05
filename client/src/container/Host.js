@@ -167,6 +167,12 @@ class Host extends Component {
 
     if (lobbyPlaylists.length) {
       lobbyPlaylists = <Scroller components={lobbyPlaylists} />;
+    } else if (!this.state.spinner) {
+      lobbyPlaylists = (
+        <div className="text-center mt-4 italic">
+          {'You have not created any lobbies yet.'}
+        </div>
+      );
     } else {
       lobbyPlaylists = <span />;
     }
@@ -182,6 +188,12 @@ class Host extends Component {
 
     if (notLobbyPlaylists.length) {
       notLobbyPlaylists = <Scroller components={notLobbyPlaylists} />;
+    } else if (!this.state.spinner) {
+      notLobbyPlaylists = (
+        <div className="text-center italic">
+          {'You do not have any playlists.'}
+        </div>
+      );
     } else {
       notLobbyPlaylists = <span />;
     }
