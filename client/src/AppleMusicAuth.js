@@ -7,12 +7,29 @@ export default class AppleMusicAuth {
   }
 
   configure() { //eslint-disable-line
-    window.MusicKit.configure({
-      developerToken: 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkdHSzVONUEyTkcifQ.eyJpYXQiOjE1MzE4NzE2NjcsImV4cCI6MTU0NzQyMzY2NywiaXNzIjoiOUwzRDY3NlUyNSJ9.yfVs40BYUDIqHTSWQspOvaJzqlGv0BGmtZVAbUDXiu4xRcIVL70Ke0KAxt_65J6PCMtsccck3cvMI6e-1vbssQ',
-      app: {
-        name: 'Juke Jam',
-        build: '2018.7.17',
-      },
+    return new Promise(function (resolve, reject) {
+      let key = "JukeJam-3OY6MXSIAB";
+      fetch(`https://www.alexandroforte.com/getTokens?key=${key}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+        if (response.status === 404) {
+          reject();
+        }
+        return response.json();
+      }).then((resp) => {
+        window.MusicKit.configure({
+          developerToken: resp.devtoken,
+          app: {
+            name: 'Juke Jam',
+            build: '2019.1.17',
+          },
+        });
+        resolve();
+      });
     });
   }
 
