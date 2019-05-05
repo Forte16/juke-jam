@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MainButton from './MainButton';
-import MiniButton from './MiniButton';
 import '../css/Guest.css';
 import '../css/tailwind.css';
 import editSVG from '../assets/edit.svg';
@@ -10,7 +9,7 @@ const LobbyPlaylist = ({ playlist, clickFunc, editFunc }) => (
   <div className="lobbyPlaylist" key={playlist.id}>
     <span>
       <img className="cover" src={playlist.artwork} alt="" />
-      <img className="editSVG" src={editSVG} title="Edit Settings" onClick={() => editFunc(playlist.id)} />
+      <img className="editSVG" src={editSVG} title="Edit Settings" alt="Edit Settings" onClick={() => editFunc(playlist.id)} />
       <div className="playlistName">
         &#9835;
         {` ${playlist.name}`}
