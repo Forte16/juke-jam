@@ -8,4 +8,3 @@ cache:
 script:
 - cd client && npm i && npm run build
 - npm run test
-- cd .. && npm run lint
